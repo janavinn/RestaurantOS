@@ -1,0 +1,185 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Restaurant {
+  id             String          @id @default(uuid())
+  name           String
+  users          User[]
+  menuItems      MenuItem[]
+  menuCategories MenuCategory[]
+  orders         Order[]
+  expenses       Expense[]
+  purchaseOrders PurchaseOrder[]
+  suppliers      Supplier[]
+  roleConfigs    RoleConfig[]
+  activityLogs   ActivityLog[]
+  ingredients    Ingredient[]
+  tables           Table[]
+  purchaseRequests PurchaseRequest[]
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+}
+
+model User {
+  id                String     @id @default(uuid())
+  name              String
+  email             String     @unique
+  passwordHash      String?    // Optional because invited staff don't have one initially
+  pin               String?    // 4-digit PIN for staff POS login
+  role              String     // "OWNER", "MANAGER", "CHEF", "WAITER", etc.
+  status            String     @default("PENDING") // "PENDING", "ACTIVE", "DISABLED"
+  shift             String?    // "Morning", "Evening", "Full Day"
+  attendance        String     @default("Not Marked") // "Present", "Absent", "Leave", "Not Marked"
+  phone             String?
+  emergencyContact  String?
+  activationToken   String?    @unique
+  activationExpires DateTime?
+  restaurantId      String
+  restaurant        Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+}
+
+model MenuCategory {
+  id           String      @id @default(uuid())
+  name         String
+  restaurantId String
+  restaurant   Restaurant  @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  menuItems    MenuItem[]
+}
+
+model MenuItem {
+  id           String      @id @default(uuid())
+  name         String
+  price        Float
+  description  String?
+  available    Boolean     @default(true)
+  categoryId   String
+  category     MenuCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  img          String?
+  restaurantId String
+  restaurant   Restaurant  @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  orderItems   OrderItem[]
+}
+
+model Order {
+  id           String      @id @default(uuid())
+  total        Float
+  status       String      @default("NEW") // "NEW", "PREPARING", "READY", "SERVED", "BILLED", "PAID"
+  paymentMethod String?    // "CASH", "UPI", "CARD"
+  tax          Float?
+  discount     Float?
+  finalTotal   Float?
+  restaurantId String
+  restaurant   Restaurant  @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  tableId      String?
+  table        Table?      @relation(fields: [tableId], references: [id], onDelete: SetNull)
+  createdAt    DateTime    @default(now())
+  items        OrderItem[]
+}
+
+model OrderItem {
+  id         String   @id @default(uuid())
+  orderId    String
+  menuItemId String
+  quantity   Int
+  price      Float
+  order      Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  menuItem   MenuItem @relation(fields: [menuItemId], references: [id], onDelete: Cascade)
+}
+
+model Table {
+  id           String     @id @default(uuid())
+  tableNumber  Int
+  status       String     @default("AVAILABLE") // "AVAILABLE", "BOOKED", "OCCUPIED"
+  restaurantId String
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  orders       Order[]
+}
+
+model Expense {
+  id           String     @id @default(uuid())
+  category     String
+  description  String
+  amount       Float
+  status       String     @default("APPROVED")
+  date         DateTime   @default(now())
+  restaurantId String
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+}
+
+model PurchaseOrder {
+  id           String     @id @default(uuid())
+  supplier     String
+  total        Float
+  status       String     @default("PENDING") // PENDING, APPROVED, REJECTED, RECEIVED
+  date         DateTime   @default(now())
+  restaurantId String
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+}
+
+model Supplier {
+  id           String     @id @default(uuid())
+  name         String
+  type         String     @default("General")
+  contact      String?
+  phone        String?
+  email        String?
+  status       String     @default("Active") // Active, Overdue, Paid
+  purchases    Float      @default(0)
+  payables     Float      @default(0)
+  restaurantId String
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+}
+
+model ActivityLog {
+  id           String     @id @default(uuid())
+  type         String     // "purchase", "stock", "expense", "staff"
+  title        String
+  time         DateTime   @default(now())
+  restaurantId String
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+}
+
+model Ingredient {
+  id           String     @id @default(uuid())
+  name         String
+  category     String     @default("General")
+  stockLevel   Float
+  minStock     Float
+  unit         String
+  supplierName String?
+  restaurantId String
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+}
+
+model RoleConfig {
+  id           String     @id @default(uuid())
+  roleName     String     
+  type         String     @default("System") 
+  permissions  Json       
+  restaurantId String
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  
+  @@unique([roleName, restaurantId])
+}
+
+model PurchaseRequest {
+  id           String     @id @default(uuid())
+  itemName     String
+  quantity     String
+  status       String     @default("PENDING") // PENDING, APPROVED, REJECTED, DELIVERED
+  requestedBy  String     // e.g. Manager's name
+  restaurantId String
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+}
