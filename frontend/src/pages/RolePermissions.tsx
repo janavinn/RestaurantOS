@@ -205,13 +205,13 @@ export default function RolePermissions() {
                     display: 'flex', alignItems: 'center', gap: '16px'
                   }}
                 >
-                  <div style={{ padding: '10px', borderRadius: '8px', background: isSelected ? '#e0e7ff' : '#f8fafc', color: isSelected ? '#6366f1' : '#94a3b8' }}>
+                  <div style={{ padding: '10px', borderRadius: '8px', background: isSelected ? 'rgba(180, 134, 0, 0.15)' : '#1f2330', color: isSelected ? '#b48600' : '#94a3b8' }}>
                     {getRoleIcon(role.roleName)}
                   </div>
                   <div style={{ flex: 1 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
                       <h4 style={{ margin: 0, fontSize: '0.95rem', color: '#f8fafc', fontWeight: 600 }}>{role.roleName}</h4>
-                      <span style={{ fontSize: '0.65rem', padding: '2px 8px', borderRadius: '4px', background: role.type === 'System' ? '#e0e7ff' : '#dcfce7', color: role.type === 'System' ? '#4f46e5' : '#15803d', fontWeight: 600 }}>{role.type}</span>
+                      <span style={{ fontSize: '0.65rem', padding: '2px 8px', borderRadius: '4px', background: role.type === 'System' ? 'rgba(99, 102, 241, 0.15)' : 'rgba(21, 128, 61, 0.15)', color: role.type === 'System' ? '#818cf8' : '#4ade80', fontWeight: 600 }}>{role.type}</span>
                     </div>
                     <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>{role.users} {role.users === 1 ? 'User' : 'Users'}</span>
                   </div>
@@ -228,13 +228,13 @@ export default function RolePermissions() {
             {/* Matrix Header */}
             <div style={{ padding: '24px', borderBottom: '1px solid #1f2330', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
               <div style={{ display: 'flex', gap: '16px' }}>
-                <div style={{ background: '#d1fae5', color: '#059669', padding: '16px', borderRadius: '50%' }}>
+                <div style={{ background: 'rgba(5, 150, 105, 0.15)', color: '#10b981', padding: '16px', borderRadius: '50%' }}>
                   <Briefcase size={28} />
                 </div>
                 <div>
                   <h2 style={{ margin: '0 0 12px 0', fontSize: '1.25rem', color: '#f8fafc' }}>{selectedRole.roleName} Permissions</h2>
                   <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-                    <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.75rem', background: '#dcfce7', color: '#15803d', padding: '4px 10px', borderRadius: '20px', fontWeight: 600 }}><Users size={12} /> {selectedRole.users} Users Assigned</span>
+                    <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.75rem', background: 'rgba(21, 128, 61, 0.15)', color: '#4ade80', padding: '4px 10px', borderRadius: '20px', fontWeight: 600 }}><Users size={12} /> {selectedRole.users} Users Assigned</span>
                   </div>
                 </div>
               </div>
@@ -314,10 +314,10 @@ export default function RolePermissions() {
               <div className="modal-body" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                   <label style={{ fontSize: '0.875rem', fontWeight: 500, color: '#e2e8f0' }}>Role Name</label>
-                  <input type="text" required value={newRoleName} onChange={e => setNewRoleName(e.target.value)} style={{ padding: '10px 12px', borderRadius: '8px', border: '1px solid #1f2330', outline: 'none' }} placeholder="e.g. Assistant Manager" />
+                  <input type="text" required value={newRoleName} onChange={e => setNewRoleName(e.target.value)} style={{ padding: '10px 12px', borderRadius: '8px', border: '1px solid #1f2330', background: '#0a0a0a', color: '#f8fafc', outline: 'none' }} placeholder="e.g. Assistant Manager" />
                 </div>
               </div>
-              <div className="modal-footer" style={{ padding: '16px 24px', background: '#0a0a0a', borderTop: '1px solid #f1f5f9', display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
+              <div className="modal-footer" style={{ padding: '16px 24px', background: '#0a0a0a', borderTop: '1px solid #1f2330', display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
                 <button type="button" onClick={() => setNewRoleModal(false)} style={{ padding: '10px 16px', borderRadius: '8px', background: '#131313', border: '1px solid #1f2330', fontWeight: 500, color: '#cbd5e1', cursor: 'pointer' }}>Cancel</button>
                 <button type="submit" style={{ padding: '10px 16px', borderRadius: '8px', background: '#b48600', border: 'none', fontWeight: 500, color: 'white', cursor: 'pointer' }}>Create Role</button>
               </div>
