@@ -111,7 +111,8 @@ export default function StaffLogin() {
     }
   };
 
-  const uniqueRoles = Array.from(new Set(staffList.map(s => s.role)));
+  const defaultRoles = Object.keys(roleConfig);
+  const uniqueRoles = Array.from(new Set([...defaultRoles, ...staffList.map(s => s.role)]));
   const filteredRoles = uniqueRoles.filter(role => role.toLowerCase().includes(searchQuery.toLowerCase()));
   const filteredStaff = staffList.filter(s => s.role === selectedRole && s.name.toLowerCase().includes(searchQuery.toLowerCase()));
 
