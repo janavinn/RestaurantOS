@@ -1219,7 +1219,10 @@ body {
 
 @media (max-width: 1024px) {
   .dashboard-layout {
+    display: flex !important;
     flex-direction: column !important;
+    height: 100vh !important;
+    overflow: hidden !important;
   }
   
   /* Make sidebar a horizontal top bar on mobile */
@@ -1227,24 +1230,31 @@ body {
     width: 100% !important;
     height: auto !important;
     min-height: auto !important;
+    flex: 0 0 auto !important;
     position: relative !important;
     border-right: none !important;
     border-bottom: 1px solid var(--border-light) !important;
-    display: flex !important;
-    flex-direction: column !important;
+    display: block !important;
   }
 
   .sidebar-header {
     padding: 12px 20px !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
   }
 
   /* Make navigation a horizontal scrolling row on mobile */
   .sidebar-scroll {
     overflow: visible !important;
+    height: auto !important;
+    display: block !important;
   }
   
   .sidebar-nav {
+    display: flex !important;
     flex-direction: row !important;
+    align-items: center !important;
     overflow-x: auto !important;
     padding: 12px !important;
     gap: 12px !important;
@@ -1257,6 +1267,7 @@ body {
   }
 
   .nav-item, .nav-item-active {
+    display: flex !important;
     flex-direction: row !important;
     justify-content: center !important;
     min-width: max-content !important;
@@ -1274,10 +1285,20 @@ body {
     display: none !important; /* Hide footer on mobile to save space */
   }
 
+  /* Hide the section headers to save horizontal space on mobile */
+  .sidebar-nav div[style*="font-size: 0.7rem"], 
+  .sidebar-nav div[style*="fontSize: '0.7rem'"],
+  .sidebar-nav div[style*="color: '#64748b'"] {
+    display: none !important;
+  }
+
   .main-content {
+    flex: 1 1 auto !important;
     margin-left: 0 !important;
     width: 100% !important;
     padding-top: 10px !important;
+    overflow-y: auto !important;
+    display: block !important;
   }
 }
 
