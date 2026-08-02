@@ -43,8 +43,10 @@ router.post('/process', upload.single('invoice'), async (req: Request, res: Resp
       console.log('No GEMINI_API_KEY provided, returning mock data.');
       return res.json({
         supplier: 'Andrews, Kirby and Valdez',
+        invoiceNumber: 'INV-12345',
         date: '2013-04-13',
         total: 6204.19,
+        items: [{ description: "Sample Item", qty: 2, price: 50.00, total: 100.00 }],
         status: 'RECEIVED'
       });
     }
@@ -62,15 +64,26 @@ router.post('/process', upload.single('invoice'), async (req: Request, res: Resp
     const prompt = `
       You are an expert AI invoice processor.
       Extract the following information from the provided invoice image:
-      1. supplier: The name of the seller or supplier company.
-      2. date: The date of the invoice (format as YYYY-MM-DD).
-      3. total: The final total amount or gross worth of the invoice (as a plain number, no currency symbols).
+      1. invoiceNumber: The unique invoice number or ID.
+      2. supplier: The name of the seller or supplier company.
+      3. date: The date of the invoice (format as YYYY-MM-DD).
+      4. total: The final total amount or gross worth of the invoice (as a plain number, no currency symbols).
+      5. items: A list of line items on the invoice. For each item, extract description, quantity (qty), unit price (price), and total price (total).
       
       Respond STRICTLY with a valid JSON object matching this schema, with no markdown formatting or extra text:
       {
+        "invoiceNumber": "string",
         "supplier": "string",
         "date": "YYYY-MM-DD",
-        "total": number
+        "total": number,
+        "items": [
+          {
+            "description": "string",
+            "qty": number,
+            "price": number,
+            "total": number
+          }
+        ]
       }
     `;
 
@@ -88,9 +101,11 @@ router.post('/process', upload.single('invoice'), async (req: Request, res: Resp
     const parsedData = JSON.parse(text);
     
     res.json({
-      supplier: parsedData.supplier,
-      date: parsedData.date,
-      total: parsedData.total,
+      invoiceNumber: parsedData.invoiceNumber || 'UNKNOWN',
+      supplier: parsedData.supplier || 'Unknown Supplier',
+      date: parsedData.date || new Date().toISOString().split('T')[0],
+      total: parsedData.total || 0,
+      items: parsedData.items || [],
       status: 'RECEIVED'
     });
 
@@ -103,13 +118,15 @@ router.post('/process', upload.single('invoice'), async (req: Request, res: Resp
 // POST: Save confirmed invoice
 router.post('/confirm', async (req: Request, res: Response): Promise<any> => {
   const restaurantId = (req as any).user.restaurantId;
-  const { supplier, total, date, status } = req.body;
+  const { invoiceNumber, supplier, total, date, status, items } = req.body;
 
   try {
     const po = await prisma.purchaseOrder.create({
       data: {
         restaurantId,
         supplier,
+        invoiceNumber: invoiceNumber || null,
+        items: items || [],
         total: parseFloat(total),
         status: status || 'RECEIVED',
         date: new Date(date || Date.now())
@@ -169,10 +186,11 @@ router.get('/export', async (req: Request, res: Response): Promise<any> => {
 
     const workbook = new xlsx.utils.book_new();
     const worksheetData = invoices.map(inv => ({
-      'Invoice ID': inv.id,
+      'Invoice No': inv.invoiceNumber || 'N/A',
       'Supplier': inv.supplier,
       'Date': new Date(inv.date).toLocaleDateString(),
       'Amount': inv.total,
+      'Items Count': Array.isArray(inv.items) ? inv.items.length : 0,
       'Status': inv.status
     }));
 
@@ -180,10 +198,11 @@ router.get('/export', async (req: Request, res: Response): Promise<any> => {
     
     // Auto-fit columns
     const wscols = [
-      { wch: 36 }, // ID
+      { wch: 20 }, // Invoice No
       { wch: 25 }, // Supplier
       { wch: 15 }, // Date
       { wch: 12 }, // Amount
+      { wch: 15 }, // Items Count
       { wch: 15 }  // Status
     ];
     worksheet['!cols'] = wscols;

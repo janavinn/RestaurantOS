@@ -14,7 +14,7 @@ export default function SupplierInvoices() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [aiModalOpen, setAiModalOpen] = useState(false);
-  const [parsedData, setParsedData] = useState({ supplier: '', date: '', total: 0, status: 'RECEIVED' });
+  const [parsedData, setParsedData] = useState<any>({ invoiceNumber: '', supplier: '', date: '', total: 0, items: [], status: 'RECEIVED' });
 
   const fetchInvoices = async () => {
     try {
@@ -337,7 +337,7 @@ export default function SupplierInvoices() {
       {/* AI Processing Confirmation Modal */}
       {aiModalOpen && (
         <div className="modal-overlay" style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(15, 23, 42, 0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
-          <div className="modal-content" style={{ background: '#161922', borderRadius: '16px', width: '100%', maxWidth: '500px', overflow: 'hidden', border: '1px solid #1f2330', boxShadow: '0 10px 25px rgba(0,0,0,0.5)' }}>
+          <div className="modal-content" style={{ background: '#161922', borderRadius: '16px', width: '100%', maxWidth: '600px', overflow: 'hidden', border: '1px solid #1f2330', boxShadow: '0 10px 25px rgba(0,0,0,0.5)' }}>
             <div className="modal-header" style={{ display: 'flex', justifyContent: 'space-between', padding: '20px 24px', borderBottom: '1px solid #1f2330' }}>
               <h2 style={{ fontSize: '1.25rem', fontWeight: 600, color: '#f8fafc', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <CheckCircle2 color="#22c55e" /> AI Extracted Data
@@ -345,10 +345,20 @@ export default function SupplierInvoices() {
               <button onClick={() => setAiModalOpen(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#9ca3af' }}><X size={20} /></button>
             </div>
             
-            <div className="modal-body" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <div className="modal-body" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '12px', maxHeight: '60vh', overflowY: 'auto' }}>
               <p style={{ color: '#9ca3af', margin: '0 0 8px 0', fontSize: '0.875rem' }}>
                 Please review the information extracted by the AI from your invoice. You can make corrections before saving.
               </p>
+
+              <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                <label style={{ fontSize: '0.875rem', fontWeight: 500, color: '#e2e8f0' }}>Invoice Number</label>
+                <input 
+                  type="text" 
+                  value={parsedData.invoiceNumber || ''} 
+                  onChange={e => setParsedData({...parsedData, invoiceNumber: e.target.value})} 
+                  style={{ padding: '10px 12px', borderRadius: '8px', border: '1px solid #1f2330', background: '#0a0a0a', outline: 'none', color: '#f8fafc' }} 
+                />
+              </div>
 
               <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                 <label style={{ fontSize: '0.875rem', fontWeight: 500, color: '#e2e8f0' }}>Supplier Name</label>
@@ -379,6 +389,34 @@ export default function SupplierInvoices() {
                   style={{ padding: '10px 12px', borderRadius: '8px', border: '1px solid #1f2330', background: '#0a0a0a', outline: 'none', color: '#f8fafc' }} 
                 />
               </div>
+
+              {parsedData.items && parsedData.items.length > 0 && (
+                <div style={{ marginTop: '12px' }}>
+                  <label style={{ fontSize: '0.875rem', fontWeight: 500, color: '#e2e8f0', marginBottom: '8px', display: 'block' }}>Extracted Items</label>
+                  <div style={{ maxHeight: '150px', overflowY: 'auto', border: '1px solid #1f2330', borderRadius: '8px', background: '#0a0a0a' }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.8rem' }}>
+                      <thead style={{ background: '#161922', position: 'sticky', top: 0 }}>
+                        <tr>
+                          <th style={{ padding: '8px', textAlign: 'left', color: '#9ca3af', borderBottom: '1px solid #1f2330' }}>Desc</th>
+                          <th style={{ padding: '8px', textAlign: 'right', color: '#9ca3af', borderBottom: '1px solid #1f2330' }}>Qty</th>
+                          <th style={{ padding: '8px', textAlign: 'right', color: '#9ca3af', borderBottom: '1px solid #1f2330' }}>Price</th>
+                          <th style={{ padding: '8px', textAlign: 'right', color: '#9ca3af', borderBottom: '1px solid #1f2330' }}>Total</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {parsedData.items.map((it: any, idx: number) => (
+                          <tr key={idx} style={{ borderBottom: '1px solid #1f2330' }}>
+                            <td style={{ padding: '8px', color: '#f8fafc' }}>{it.description}</td>
+                            <td style={{ padding: '8px', textAlign: 'right', color: '#cbd5e1' }}>{it.qty}</td>
+                            <td style={{ padding: '8px', textAlign: 'right', color: '#cbd5e1' }}>{it.price}</td>
+                            <td style={{ padding: '8px', textAlign: 'right', color: '#f8fafc', fontWeight: 500 }}>{it.total}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className="modal-footer" style={{ padding: '16px 24px', background: '#0f1219', borderTop: '1px solid #1f2330', display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
