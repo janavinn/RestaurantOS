@@ -111,8 +111,9 @@ router.post('/invite', authenticate, async (req: Request, res: Response): Promis
     });
 
     // Send email
-    // Link format: http://localhost:5173/setup-account?token=...&role=...
-    const inviteUrl = `http://localhost:5173/setup-account?token=${token}&role=${role}`;
+    // Link format: https://frontend-url/setup-account?token=...&role=...
+    const frontendUrl = req.headers.origin || process.env.FRONTEND_URL || 'http://localhost:5173';
+    const inviteUrl = `${frontendUrl}/setup-account?token=${token}&role=${role}`;
     const emailSent = await sendInviteEmail(email, restaurant?.name || 'Restaurant', inviteUrl);
 
     res.json({
