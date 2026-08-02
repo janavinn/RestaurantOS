@@ -31,7 +31,7 @@ export default function Register() {
       }
 
       alert('Workspace created successfully!');
-      navigate('/owner/login');
+      navigate('/aarunya/owner/login');
     } catch (err: any) {
       alert(err.message);
     } finally {

@@ -124,7 +124,7 @@ export default function StoreKeeperDashboard() {
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    navigate('/staff/login');
+    navigate('/aarunya/staff/login');
   };
 
   return (

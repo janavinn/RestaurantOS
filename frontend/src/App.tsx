@@ -42,9 +42,9 @@ const ProtectedRoute = ({ children, allowedRoles }: { children: React.ReactNode,
   
   if (!userStr) {
     if (urlRole?.toLowerCase() === 'owner') {
-      return <Navigate to="/owner/login" replace />;
+      return <Navigate to="/aarunya/owner/login" replace />;
     }
-    return <Navigate to="/staff/login" replace />;
+    return <Navigate to="/aarunya/staff/login" replace />;
   }
   
   const user = JSON.parse(userStr);
@@ -54,13 +54,13 @@ const ProtectedRoute = ({ children, allowedRoles }: { children: React.ReactNode,
   if (urlRole && urlRole.toLowerCase() !== role.toLowerCase()) {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    return <Navigate to={urlRole?.toLowerCase() === 'owner' ? '/owner/login' : '/staff/login'} replace />;
+    return <Navigate to={urlRole?.toLowerCase() === 'owner' ? '/aarunya/owner/login' : '/aarunya/staff/login'} replace />;
   }
   
   if (urlUsername && urlUsername.toLowerCase() !== nameSlug) {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    return <Navigate to={urlRole?.toLowerCase() === 'owner' ? '/owner/login' : '/staff/login'} replace />;
+    return <Navigate to={urlRole?.toLowerCase() === 'owner' ? '/aarunya/owner/login' : '/aarunya/staff/login'} replace />;
   }
   
   if (!allowedRoles.includes(role)) {
@@ -81,9 +81,9 @@ const RootRedirect = () => {
   
   if (!userStr) {
     if (urlRole?.toLowerCase() === 'owner') {
-      return <Navigate to="/owner/login" replace />;
+      return <Navigate to="/aarunya/owner/login" replace />;
     }
-    return <Navigate to="/staff/login" replace />;
+    return <Navigate to="/aarunya/staff/login" replace />;
   }
   
   const user = JSON.parse(userStr);
@@ -93,13 +93,13 @@ const RootRedirect = () => {
   if (urlRole && urlRole.toLowerCase() !== roleSlug) {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    return <Navigate to={urlRole?.toLowerCase() === 'owner' ? '/owner/login' : '/staff/login'} replace />;
+    return <Navigate to={urlRole?.toLowerCase() === 'owner' ? '/aarunya/owner/login' : '/aarunya/staff/login'} replace />;
   }
   
   if (urlUsername && urlUsername.toLowerCase() !== nameSlug) {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    return <Navigate to={urlRole?.toLowerCase() === 'owner' ? '/owner/login' : '/staff/login'} replace />;
+    return <Navigate to={urlRole?.toLowerCase() === 'owner' ? '/aarunya/owner/login' : '/aarunya/staff/login'} replace />;
   }
   
   if (user.role === 'CHEF') return <Navigate to={`/${roleSlug}/${nameSlug}/kitchen-orders`} replace />;
@@ -123,15 +123,17 @@ function App() {
     <BrowserRouter>
       <Routes>
         {/* Global Access Routes */}
-        <Route path="/owner/login" element={<Login />} />
+        <Route path="/aarunya/owner/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/setup-account" element={<Activate />} />
         
         {/* POS-Style Staff Login */}
-        <Route path="/staff/login" element={<StaffLogin />} />
+        <Route path="/aarunya/staff/login" element={<StaffLogin />} />
         
         {/* Backward Compatibility Redirects */}
-        <Route path="/staff-login" element={<Navigate to="/staff/login" replace />} />
+        <Route path="/owner/login" element={<Navigate to="/aarunya/owner/login" replace />} />
+        <Route path="/staff/login" element={<Navigate to="/aarunya/staff/login" replace />} />
+        <Route path="/staff-login" element={<Navigate to="/aarunya/staff/login" replace />} />
         
         {/* Global Root Redirect */}
         <Route path="/" element={<RootRedirect />} />
