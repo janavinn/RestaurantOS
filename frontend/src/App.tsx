@@ -3,6 +3,8 @@ import Login from './pages/Login';
 import StaffLogin from './pages/StaffLogin';
 import Register from './pages/Register';
 import Activate from './pages/Activate';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 import Dashboard from './pages/Dashboard';
 import StaffManagement from './pages/StaffManagement';
 import RolePermissions from './pages/RolePermissions';
@@ -126,6 +128,8 @@ function App() {
         <Route path="/aarunya/owner/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/setup-account" element={<Activate />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
         
         {/* POS-Style Staff Login */}
         <Route path="/aarunya/staff/login" element={<StaffLogin />} />

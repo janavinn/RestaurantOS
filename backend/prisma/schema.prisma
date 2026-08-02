@@ -40,6 +40,8 @@ model User {
   emergencyContact  String?
   activationToken   String?    @unique
   activationExpires DateTime?
+  resetToken        String?    @unique
+  resetExpires      DateTime?
   restaurantId      String
   restaurant        Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
   createdAt         DateTime   @default(now())

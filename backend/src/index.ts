@@ -4,6 +4,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { PrismaClient } from '@prisma/client';
 import crypto from 'crypto';
+import nodemailer from 'nodemailer';
 
 const app = express();
 const prisma = new PrismaClient();
@@ -84,6 +85,86 @@ app.post('/api/auth/login', async (req: Request, res: Response): Promise<any> =>
 
 
 // ==========================================
+
+
+// ==========================================
+// 3. FORGOT / RESET PASSWORD
+// ==========================================
+app.post('/api/auth/forgot-password', async (req: Request, res: Response): Promise<any> => {
+  const { email } = req.body;
+  if (!email) return res.status(400).json({ error: 'Email required' });
+
+  try {
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) return res.status(404).json({ error: 'User not found' });
+
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    const resetExpires = new Date(Date.now() + 3600000); // 1 hour
+
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { resetToken, resetExpires },
+    });
+
+    const resetUrl = `https://restaurant-os-fjqs.vercel.app/reset-password/${resetToken}`;
+
+    let transporter = nodemailer.createTransport({
+      host: 'smtp.ethereal.email',
+      port: 587,
+      auth: {
+        user: 'mylene.stehr53@ethereal.email',
+        pass: '6Q9Z5bS3Y3eT2B2mD9'
+      }
+    });
+
+    const info = await transporter.sendMail({
+      from: '"Aarunya Admin" <admin@aarunya.com>',
+      to: email,
+      subject: 'Password Reset Request',
+      text: `You requested a password reset. Click this link to reset your password: ${resetUrl}`,
+      html: `<p>You requested a password reset.</p><p><a href="${resetUrl}">Click here to reset your password</a></p>`
+    });
+
+    console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+
+    res.json({ message: 'If an account with that email exists, we sent a password reset link.' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to process request' });
+  }
+});
+
+app.post('/api/auth/reset-password', async (req: Request, res: Response): Promise<any> => {
+  const { token, newPassword } = req.body;
+  if (!token || !newPassword) return res.status(400).json({ error: 'Token and new password required' });
+
+  try {
+    const user = await prisma.user.findFirst({
+      where: {
+        resetToken: token,
+        resetExpires: { gt: new Date() }
+      }
+    });
+
+    if (!user) return res.status(400).json({ error: 'Invalid or expired token' });
+
+    const passwordHash = await bcrypt.hash(newPassword, 10);
+
+    await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        passwordHash,
+        resetToken: null,
+        resetExpires: null
+      }
+    });
+
+    res.json({ message: 'Password reset successfully. You can now login.' });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to reset password' });
+  }
+});
+
 // 4. ACTIVATE STAFF
 // ==========================================
 app.post('/api/staff/activate', async (req: Request, res: Response): Promise<any> => {
