@@ -59,14 +59,9 @@ export default function Dashboard() {
 
   return (
     <>
-      <div className="welcome-section" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '24px' }}>
-        <div className="welcome-text">
-          <h1 style={{ fontSize: '1.5rem', fontWeight: 500, color: '#1e293b', marginBottom: '4px' }}>Welcome back, <b>{userName}</b> 👋</h1>
-          <p style={{ color: '#64748b', fontSize: '0.9rem' }}>Here's an overview of your restaurant business.</p>
-        </div>
-        <div className="date-picker">
-          📅 {todayStr} <ChevronDown size={14} />
-        </div>
+      <div style={{ textAlign: 'center', marginBottom: '24px' }}>
+        <h1 style={{ fontSize: '1.875rem', fontWeight: 600, color: '#f8fafc', marginBottom: '8px' }}>Welcome back, <b>{userName}</b> 👋</h1>
+        <p style={{ color: '#9ca3af', fontSize: '1rem', margin: 0 }}>Here's an overview of your restaurant business.</p>
       </div>
 
       {/* TOP METRICS */}

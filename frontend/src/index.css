@@ -1211,3 +1211,71 @@ body {
   border-width: 0 2px 2px 0;
   transform: rotate(45deg);
 }
+
+
+/* =========================================
+   RESPONSIVENESS (MOBILE COMPATIBILITY)
+   ========================================= */
+
+@media (max-width: 1024px) {
+  /* Layout Adjustments */
+  .layout-container {
+    flex-direction: column !important;
+  }
+  
+  .sidebar {
+    width: 100% !important;
+    height: auto !important;
+    min-height: auto !important;
+    position: relative !important;
+    border-right: none !important;
+    border-bottom: 1px solid var(--border-light) !important;
+  }
+
+  .main-content {
+    margin-left: 0 !important;
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Login Layout */
+  .login-layout {
+    flex-direction: column;
+  }
+  .login-hero {
+    display: none; /* Hide hero on small screens */
+  }
+
+  /* Grid Layouts - Stack vertically on small screens */
+  div[style*="grid-template-columns: repeat(4, 1fr)"],
+  div[style*="gridTemplateColumns: 'repeat(4, 1fr)'"],
+  div[style*="grid-template-columns: repeat(3, 1fr)"],
+  div[style*="gridTemplateColumns: 'repeat(3, 1fr)'"],
+  div[style*="grid-template-columns: 2fr 1fr"],
+  div[style*="gridTemplateColumns: '2fr 1fr'"] {
+    grid-template-columns: 1fr !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  
+  /* Make all stat cards take full width */
+  .stat-card {
+    width: 100% !important;
+  }
+
+  /* Tables container scrolling */
+  table {
+    display: block;
+    max-width: -moz-fit-content;
+    max-width: fit-content;
+    margin: 0 auto;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  
+  /* Hide specific complex charts on tiny screens if needed */
+  .chart-container {
+    overflow-x: scroll;
+  }
+}
