@@ -136,6 +136,45 @@ router.post('/invite', authenticate, async (req: Request, res: Response): Promis
   }
 });
 
+// POST resend invite link
+router.post('/:id/resend-invite', authenticate, async (req: Request, res: Response): Promise<any> => {
+  const { id } = req.params;
+  const restaurantId = (req as any).user.restaurantId;
+
+  try {
+    const user = await prisma.user.findFirst({ where: { id, restaurantId } });
+    if (!user || user.status !== 'PENDING') {
+      return res.status(400).json({ error: 'User not found or already active' });
+    }
+
+    const restaurant = await prisma.restaurant.findUnique({ where: { id: restaurantId } });
+
+    // Generate new token
+    const token = crypto.randomBytes(32).toString('hex');
+    const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+    const expires = new Date();
+    expires.setHours(expires.getHours() + 24);
+
+    await prisma.user.update({
+      where: { id },
+      data: {
+        activationToken: hashedToken,
+        activationExpires: expires
+      }
+    });
+
+    const frontendUrl = req.headers.origin || process.env.FRONTEND_URL || 'http://localhost:5173';
+    const inviteUrl = `${frontendUrl}/setup-account?token=${token}&role=${user.role}`;
+    
+    sendInviteEmail(user.email, restaurant?.name || 'Restaurant', inviteUrl).catch(e => console.error(e));
+
+    res.json({ inviteUrl });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to resend invite' });
+  }
+});
+
 // PUT update staff details
 router.put('/:id', authenticate, async (req: Request, res: Response): Promise<any> => {
   const restaurantId = (req as any).user.restaurantId;
