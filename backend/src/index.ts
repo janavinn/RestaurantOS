@@ -248,6 +248,7 @@ import purchaseRequestsRouter from './routes/purchaseRequests';
 import inventoryRoutes from './routes/inventory';
 import reportsRouter from './routes/reports';
 import invoicesRouter from './routes/invoices';
+import chatRouter from './routes/chat';
 
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/menu', menuRoutes);
@@ -263,6 +264,7 @@ app.use('/api/purchase-requests', purchaseRequestsRouter);
 app.use('/api/inventory', inventoryRoutes);
 app.use('/api/reports', reportsRouter);
 app.use('/api/invoices', invoicesRouter);
+app.use('/api/chat', chatRouter);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

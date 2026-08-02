@@ -1,4 +1,5 @@
 import { Outlet, useNavigate, useLocation, useParams } from 'react-router-dom';
+import ChatWidget from './ChatWidget';
 import { 
   Search, Bell, ChevronDown, LayoutDashboard, Users, UserCog, Truck, 
   Carrot, Menu as MenuIcon, BookOpen, Package, ShoppingCart, Tags, FileText, 
@@ -371,6 +372,9 @@ export default function DashboardLayout() {
           <Outlet />
         </div>
       </main>
+
+      {/* RENDER CHAT WIDGET ONLY FOR MANAGEMENT */}
+      {['OWNER', 'MANAGER'].includes(userRole) && <ChatWidget />}
     </div>
   );
 }
