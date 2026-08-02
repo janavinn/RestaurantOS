@@ -110,11 +110,11 @@ router.post('/invite', authenticate, async (req: Request, res: Response): Promis
       }
     });
 
-    // Send email
-    // Link format: https://frontend-url/setup-account?token=...&role=...
+    // Send email in the background so the UI doesn't hang
     const frontendUrl = req.headers.origin || process.env.FRONTEND_URL || 'http://localhost:5173';
     const inviteUrl = `${frontendUrl}/setup-account?token=${token}&role=${role}`;
-    const emailSent = await sendInviteEmail(email, restaurant?.name || 'Restaurant', inviteUrl);
+    
+    sendInviteEmail(email, restaurant?.name || 'Restaurant', inviteUrl).catch(e => console.error("Failed to send background email:", e));
 
     res.json({
       message: 'Staff invited successfully',
@@ -127,7 +127,7 @@ router.post('/invite', authenticate, async (req: Request, res: Response): Promis
         status: newUser.status
       },
       inviteUrl: inviteUrl,
-      emailSent
+      emailSent: true
     });
 
   } catch (err) {
