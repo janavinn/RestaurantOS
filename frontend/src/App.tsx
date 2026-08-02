@@ -83,7 +83,7 @@ const RootRedirect = () => {
     if (urlRole && urlUsername) {
       return <Navigate to={`/${urlRole}/${urlUsername}/login`} replace />;
     }
-    return <Navigate to="/terminal" replace />;
+    return <Navigate to="/staff-login" replace />;
   }
   
   const user = JSON.parse(userStr);
@@ -128,7 +128,7 @@ function App() {
         <Route path="/setup-account" element={<Activate />} />
         
         {/* POS-Style Staff Login */}
-        <Route path="/terminal" element={<StaffLogin />} />
+        <Route path="/staff-login" element={<StaffLogin />} />
         
         {/* Global Root Redirect */}
         <Route path="/" element={<RootRedirect />} />

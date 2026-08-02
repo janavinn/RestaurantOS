@@ -185,7 +185,7 @@ export default function StaffLogin() {
             <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
               <div style={{ width: '4px', height: '48px', backgroundColor: '#fcd34d', borderRadius: '4px' }} />
               <div>
-                <h1 style={{ margin: 0, fontSize: '2rem', fontWeight: 700, color: '#f9fafb', letterSpacing: '-0.5px' }}>Terminal Login</h1>
+                <h1 style={{ margin: 0, fontSize: '2rem', fontWeight: 700, color: '#f9fafb', letterSpacing: '-0.5px' }}>Staff Login</h1>
                 <p style={{ margin: '4px 0 0 0', color: '#9ca3af', fontSize: '0.95rem' }}>
                   {!selectedRole ? 'Select your department to begin your shift.' : 'Select your profile to authenticate.'}
                 </p>

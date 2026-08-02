@@ -49,7 +49,7 @@ export default function Activate() {
       }
 
       alert('Account activated successfully! You can now log in using your PIN.');
-      navigate('/terminal');
+      navigate('/staff-login');
     } catch (err: any) {
       setError(err.message);
     } finally {
