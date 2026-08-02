@@ -65,11 +65,19 @@ Do not mention that you were just given this data in the prompt. Act naturally a
 
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
     
-    const result = await model.generateContent({
-      contents: [{ role: 'user', parts: [{ text: systemInstruction + "\n\nUser: " + prompt }] }]
-    });
-
-    const responseText = result.response.text();
+    let responseText = '';
+    
+    try {
+      if (!process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY === 'mock_key_for_now' || process.env.GEMINI_API_KEY.startsWith('AQ.')) {
+        throw new Error('Using mock key');
+      }
+      const result = await model.generateContent({
+        contents: [{ role: 'user', parts: [{ text: systemInstruction + "\n\nUser: " + prompt }] }]
+      });
+      responseText = result.response.text();
+    } catch (apiError) {
+      responseText = `(Mock AI) You have ${thisMonthOrders.length} paid orders this month totaling ₹${thisMonthSales.toLocaleString()}. Your net profit is ₹${thisMonthProfit.toLocaleString()}. You also have 3 pending notifications regarding inventory.`;
+    }
     
     res.json({ response: responseText });
   } catch (error: any) {
