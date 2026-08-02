@@ -38,7 +38,12 @@ router.get('/', authenticate, async (req: Request, res: Response): Promise<any> 
     
     const thisMonthSales = thisMonthOrders.reduce((sum, o) => sum + o.total, 0);
     const lastMonthSales = lastMonthOrders.reduce((sum, o) => sum + o.total, 0);
-    const salesTrend = lastMonthSales ? ((thisMonthSales - lastMonthSales) / lastMonthSales * 100) : 100;
+    const calcTrend = (current: number, previous: number) => {
+      if (previous === 0) return current > 0 ? 100 : 0;
+      return ((current - previous) / Math.abs(previous)) * 100;
+    };
+
+    const salesTrend = calcTrend(thisMonthSales, lastMonthSales);
 
     // Purchases
     const thisMonthPurchases = await prisma.purchaseOrder.findMany({
@@ -49,7 +54,7 @@ router.get('/', authenticate, async (req: Request, res: Response): Promise<any> 
     });
     const thisMonthPurchaseTotal = thisMonthPurchases.reduce((sum, p) => sum + p.total, 0);
     const lastMonthPurchaseTotal = lastMonthPurchases.reduce((sum, p) => sum + p.total, 0);
-    const purchaseTrend = lastMonthPurchaseTotal ? ((thisMonthPurchaseTotal - lastMonthPurchaseTotal) / lastMonthPurchaseTotal * 100) : 100;
+    const purchaseTrend = calcTrend(thisMonthPurchaseTotal, lastMonthPurchaseTotal);
 
     // Expenses
     const thisMonthExpenses = await prisma.expense.findMany({
@@ -60,12 +65,12 @@ router.get('/', authenticate, async (req: Request, res: Response): Promise<any> 
     });
     const thisMonthExpenseTotal = thisMonthExpenses.reduce((sum, e) => sum + e.amount, 0);
     const lastMonthExpenseTotal = lastMonthExpenses.reduce((sum, e) => sum + e.amount, 0);
-    const expenseTrend = lastMonthExpenseTotal ? ((thisMonthExpenseTotal - lastMonthExpenseTotal) / lastMonthExpenseTotal * 100) : -10;
+    const expenseTrend = calcTrend(thisMonthExpenseTotal, lastMonthExpenseTotal);
 
     // Profit
     const thisMonthProfit = thisMonthSales - thisMonthPurchaseTotal - thisMonthExpenseTotal;
     const lastMonthProfit = lastMonthSales - lastMonthPurchaseTotal - lastMonthExpenseTotal;
-    const profitTrend = lastMonthProfit ? ((thisMonthProfit - lastMonthProfit) / Math.abs(lastMonthProfit) * 100) : 100;
+    const profitTrend = calcTrend(thisMonthProfit, lastMonthProfit);
 
     // 2. SPARKLINE DATA (Last 7 days)
     const sparklineSales = [];

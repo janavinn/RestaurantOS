@@ -73,9 +73,13 @@ export default function Dashboard() {
             <div className="metric-info">
               <span className="metric-label">Total Sales (This Month)</span>
               <span className="metric-value">₹ {metrics.sales.value.toLocaleString()}</span>
-              <span className={`metric-trend ${metrics.sales.trend >= 0 ? 'positive' : 'negative'}`}>
-                {metrics.sales.trend >= 0 ? '▲' : '▼'} {Math.abs(metrics.sales.trend).toFixed(1)}% <span className="trend-text">vs last month</span>
-              </span>
+              {metrics.sales.value > 0 ? (
+                <span className={`metric-trend ${metrics.sales.trend >= 0 ? 'positive' : 'negative'}`}>
+                  {metrics.sales.trend >= 0 ? '▲' : '▼'} {Math.abs(metrics.sales.trend).toFixed(1)}% <span className="trend-text">vs last month</span>
+                </span>
+              ) : (
+                <span className="metric-trend" style={{ color: '#64748b' }}>No data yet</span>
+              )}
             </div>
           </div>
           <div className="sparkline">
@@ -93,9 +97,13 @@ export default function Dashboard() {
             <div className="metric-info">
               <span className="metric-label">Total Purchases (This Month)</span>
               <span className="metric-value">₹ {metrics.purchases.value.toLocaleString()}</span>
-              <span className={`metric-trend ${metrics.purchases.trend >= 0 ? 'positive' : 'negative'}`}>
-                {metrics.purchases.trend >= 0 ? '▲' : '▼'} {Math.abs(metrics.purchases.trend).toFixed(1)}% <span className="trend-text">vs last month</span>
-              </span>
+              {metrics.purchases.value > 0 ? (
+                <span className={`metric-trend ${metrics.purchases.trend >= 0 ? 'positive' : 'negative'}`}>
+                  {metrics.purchases.trend >= 0 ? '▲' : '▼'} {Math.abs(metrics.purchases.trend).toFixed(1)}% <span className="trend-text">vs last month</span>
+                </span>
+              ) : (
+                <span className="metric-trend" style={{ color: '#64748b' }}>No data yet</span>
+              )}
             </div>
           </div>
           <div className="sparkline">
@@ -114,9 +122,13 @@ export default function Dashboard() {
             <div className="metric-info">
               <span className="metric-label">Total Expenses (This Month)</span>
               <span className="metric-value">₹ {metrics.expenses.value.toLocaleString()}</span>
-              <span className={`metric-trend ${metrics.expenses.trend <= 0 ? 'positive' : 'negative'}`}>
-                {metrics.expenses.trend <= 0 ? '▼' : '▲'} {Math.abs(metrics.expenses.trend).toFixed(1)}% <span className="trend-text">vs last month</span>
-              </span>
+              {metrics.expenses.value > 0 ? (
+                <span className={`metric-trend ${metrics.expenses.trend <= 0 ? 'positive' : 'negative'}`}>
+                  {metrics.expenses.trend <= 0 ? '▲' : '▼'} {Math.abs(metrics.expenses.trend).toFixed(1)}% <span className="trend-text">vs last month</span>
+                </span>
+              ) : (
+                <span className="metric-trend" style={{ color: '#64748b' }}>No data yet</span>
+              )}
             </div>
           </div>
           <div className="sparkline">
@@ -136,9 +148,13 @@ export default function Dashboard() {
             <div className="metric-info">
               <span className="metric-label">Net Profit (This Month)</span>
               <span className="metric-value">₹ {metrics.profit.value.toLocaleString()}</span>
-              <span className={`metric-trend ${metrics.profit.trend >= 0 ? 'positive' : 'negative'}`}>
-                {metrics.profit.trend >= 0 ? '▲' : '▼'} {Math.abs(metrics.profit.trend).toFixed(1)}% <span className="trend-text">vs last month</span>
-              </span>
+              {metrics.profit.value !== 0 ? (
+                <span className={`metric-trend ${metrics.profit.trend >= 0 ? 'positive' : 'negative'}`}>
+                  {metrics.profit.trend >= 0 ? '▲' : '▼'} {Math.abs(metrics.profit.trend).toFixed(1)}% <span className="trend-text">vs last month</span>
+                </span>
+              ) : (
+                <span className="metric-trend" style={{ color: '#64748b' }}>No data yet</span>
+              )}
             </div>
           </div>
           <div className="sparkline">
