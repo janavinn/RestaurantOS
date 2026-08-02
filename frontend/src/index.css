@@ -1218,11 +1218,11 @@ body {
    ========================================= */
 
 @media (max-width: 1024px) {
-  /* Layout Adjustments */
   .layout-container {
     flex-direction: column !important;
   }
   
+  /* Make sidebar a horizontal top bar on mobile */
   .sidebar {
     width: 100% !important;
     height: auto !important;
@@ -1230,11 +1230,54 @@ body {
     position: relative !important;
     border-right: none !important;
     border-bottom: 1px solid var(--border-light) !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  .sidebar-header {
+    padding: 12px 20px !important;
+  }
+
+  /* Make navigation a horizontal scrolling row on mobile */
+  .sidebar-scroll {
+    overflow: visible !important;
+  }
+  
+  .sidebar-nav {
+    flex-direction: row !important;
+    overflow-x: auto !important;
+    padding: 12px !important;
+    gap: 12px !important;
+    /* Hide scrollbar */
+    scrollbar-width: none; 
+    -ms-overflow-style: none;
+  }
+  .sidebar-nav::-webkit-scrollbar { 
+    display: none; 
+  }
+
+  .nav-item, .nav-item-active {
+    flex-direction: row !important;
+    justify-content: center !important;
+    min-width: max-content !important;
+    padding: 10px 16px !important;
+    border-radius: 20px !important;
+    margin: 0 !important;
+  }
+  
+  /* Force text to show on mobile if it was hidden by isSidebarOpen=false */
+  .nav-item span, .nav-item-active span {
+    display: block !important;
+  }
+
+  .sidebar-footer {
+    display: none !important; /* Hide footer on mobile to save space */
   }
 
   .main-content {
     margin-left: 0 !important;
     width: 100% !important;
+    padding-top: 10px !important;
   }
 }
 
@@ -1274,7 +1317,6 @@ body {
     white-space: nowrap;
   }
   
-  /* Hide specific complex charts on tiny screens if needed */
   .chart-container {
     overflow-x: scroll;
   }
