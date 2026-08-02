@@ -130,6 +130,9 @@ function App() {
         {/* POS-Style Staff Login */}
         <Route path="/staff/login" element={<StaffLogin />} />
         
+        {/* Backward Compatibility Redirects */}
+        <Route path="/staff-login" element={<Navigate to="/staff/login" replace />} />
+        
         {/* Global Root Redirect */}
         <Route path="/" element={<RootRedirect />} />
         
