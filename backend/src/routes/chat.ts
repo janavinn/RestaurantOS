@@ -68,7 +68,7 @@ Do not mention that you were just given this data in the prompt. Act naturally a
     let responseText = '';
     
     try {
-      if (!process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY === 'mock_key_for_now' || process.env.GEMINI_API_KEY.startsWith('AQ.')) {
+      if (!process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY === 'mock_key_for_now') {
         throw new Error('Using mock key');
       }
       const result = await model.generateContent({
