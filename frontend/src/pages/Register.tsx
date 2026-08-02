@@ -31,7 +31,7 @@ export default function Register() {
       }
 
       alert('Workspace created successfully!');
-      navigate('/login');
+      navigate('/owner/login');
     } catch (err: any) {
       alert(err.message);
     } finally {

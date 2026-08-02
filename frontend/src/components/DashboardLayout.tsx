@@ -20,7 +20,7 @@ export default function DashboardLayout() {
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) {
-      navigate('/login');
+      navigate(urlRole?.toLowerCase() === 'owner' ? '/owner/login' : '/staff/login');
       return;
     }
     const userStr = localStorage.getItem('user');
@@ -164,7 +164,7 @@ export default function DashboardLayout() {
               {/* Log Out */}
               <div style={{ padding: '24px 8px', marginTop: 'auto' }}>
                 <div 
-                  onClick={() => navigate('/login')}
+                  onClick={() => { localStorage.removeItem('token'); localStorage.removeItem('user'); navigate('/staff/login'); }}
                   style={{ display: 'flex', alignItems: 'center', gap: '16px', color: '#d1d5db', cursor: 'pointer', fontSize: '0.9rem', fontWeight: 500, padding: '8px' }}
                 >
                   <LogOut size={20} color="#9ca3af" />
@@ -225,7 +225,7 @@ export default function DashboardLayout() {
               <div style={{ padding: '24px 8px', marginTop: 'auto' }}>
                 <div 
                   title="Log Out"
-                  onClick={() => navigate('/login')}
+                  onClick={() => { localStorage.removeItem('token'); localStorage.removeItem('user'); navigate('/staff/login'); }}
                   style={{ display: 'flex', alignItems: 'center', gap: '16px', color: '#d1d5db', cursor: 'pointer', fontSize: '0.9rem', fontWeight: 500, padding: '8px' }}
                 >
                   <LogOut size={20} color="#9ca3af" style={{ flexShrink: 0 }} />

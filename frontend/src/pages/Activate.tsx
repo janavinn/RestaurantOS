@@ -19,7 +19,7 @@ export default function Activate() {
         <div className="auth-card glass-panel" style={{ textAlign: 'center' }}>
           <h2 style={{ color: '#ef4444' }}>Invalid Link</h2>
           <p style={{ marginTop: '16px', marginBottom: '24px' }}>Activation token is missing.</p>
-          <button className="btn-primary" onClick={() => navigate('/login')} style={{ width: '100%', padding: '12px', background: '#6366f1', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer' }}>Go to Login</button>
+          <button className="btn-primary" onClick={() => navigate('/owner/login')} style={{ width: '100%', padding: '12px', background: '#6366f1', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer' }}>Go to Login</button>
         </div>
       </div>
     );
@@ -49,7 +49,7 @@ export default function Activate() {
       }
 
       alert('Account activated successfully! You can now log in using your PIN.');
-      navigate('/staff-login');
+      navigate('/staff/login');
     } catch (err: any) {
       setError(err.message);
     } finally {
