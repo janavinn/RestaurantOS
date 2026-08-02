@@ -160,16 +160,15 @@ export default function StaffLogin() {
       <div className="main-container" style={{ 
         position: 'relative', 
         zIndex: 10, 
-        margin: 'auto', 
-        width: '95%', 
-        maxWidth: '1280px', 
-        height: '85vh',
+        margin: 0, 
+        width: '100%', 
+        maxWidth: 'none', 
+        height: '100vh',
         display: 'flex',
-        borderRadius: '16px',
+        borderRadius: 0,
         overflow: 'hidden',
-        boxShadow: '0 25px 50px -12px rgba(0,0,0,0.8)',
-        backgroundColor: '#17171a', // Exact dark grey from mockup
-        border: '1px solid #2a2a2a'
+        backgroundColor: '#17171a',
+        border: 'none'
       }}>
         
         {/* LEFT PANEL */}
