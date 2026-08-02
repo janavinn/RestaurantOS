@@ -14,6 +14,13 @@ export default function DashboardLayout() {
   const [userName, setUserName] = useState('');
   const [userRole, setUserRole] = useState('');
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [notifications, setNotifications] = useState([
+    { id: 1, text: 'New order received (#1042)', time: '2m ago', unread: true },
+    { id: 2, text: 'Inventory alert: Tomatoes low', time: '1h ago', unread: true },
+    { id: 3, text: 'Purchase request approved', time: '2h ago', unread: false }
+  ]);
 
   const basePath = `/${urlRole}/${urlUsername}`;
 
@@ -30,6 +37,12 @@ export default function DashboardLayout() {
       setUserRole(user.role || 'OWNER');
     }
   }, [navigate]);
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    navigate(urlRole?.toLowerCase() === 'owner' ? '/aarunya/owner/login' : '/aarunya/staff/login');
+  };
 
   const ALL_ROLES = ['OWNER', 'MANAGER', 'CHEF', 'WAITER'];
   const BACK_OFFICE = ['OWNER', 'MANAGER'];
@@ -297,22 +310,59 @@ export default function DashboardLayout() {
                 <Search size={18} color="#94a3b8" />
               </div>
             </div>
-            
-            <div className="header-actions">
-              <div className="notification-bell">
-                <Bell size={20} color="#64748b" />
-                <span className="badge" style={{ background: '#7e22ce' }}>5</span>
-              </div>
-              
-              <div className="user-profile">
-                <div className="avatar" style={{ background: '#3a2810', color: '#f59e0b', border: '1px solid #b48600' }}>{userName.substring(0, 2).toUpperCase() || 'JN'}</div>
-                <div className="user-info">
-                  <span className="user-name">{userName || 'Janavi N N'}</span>
-                  <span className="user-role">{userRole || 'Owner'}</span>
+                        <div className="header-actions">
+                <div className="notification-bell" style={{ position: 'relative', cursor: 'pointer' }} onClick={() => { setShowNotifications(!showNotifications); setShowProfileMenu(false); }}>
+                  <Bell size={20} color="#64748b" />
+                  {notifications.filter(n => n.unread).length > 0 && (
+                    <span className="badge" style={{ background: '#7e22ce' }}>{notifications.filter(n => n.unread).length}</span>
+                  )}
+                  {showNotifications && (
+                    <div style={{ position: 'absolute', top: '40px', right: '0', background: '#1e1e2d', border: '1px solid #1f2330', borderRadius: '12px', width: '320px', zIndex: 100, boxShadow: '0 10px 25px rgba(0,0,0,0.5)', overflow: 'hidden' }}>
+                      <div style={{ padding: '12px 16px', borderBottom: '1px solid #1f2330', fontSize: '0.85rem', fontWeight: 600, color: '#f8fafc', display: 'flex', justifyContent: 'space-between' }}>
+                        <span>Notifications</span>
+                        <span style={{ color: '#6366f1', cursor: 'pointer' }} onClick={(e) => { e.stopPropagation(); setNotifications(notifications.map(n => ({...n, unread: false}))); }}>Mark all read</span>
+                      </div>
+                      <div style={{ maxHeight: '300px', overflowY: 'auto' }}>
+                        {notifications.map(n => (
+                          <div key={n.id} style={{ padding: '12px 16px', borderBottom: '1px solid #1f2330', background: n.unread ? 'rgba(99, 102, 241, 0.1)' : 'transparent', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                            <div style={{ fontSize: '0.85rem', color: '#f8fafc' }}>{n.text}</div>
+                            <div style={{ fontSize: '0.7rem', color: '#64748b' }}>{n.time}</div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
-                <ChevronDown size={16} color="#64748b" />
+                
+                <div className="user-profile" style={{ position: 'relative', cursor: 'pointer' }} onClick={() => { setShowProfileMenu(!showProfileMenu); setShowNotifications(false); }}>
+                  <div className="avatar" style={{ background: '#3a2810', color: '#f59e0b', border: '1px solid #b48600' }}>{userName.substring(0, 2).toUpperCase() || 'JN'}</div>
+                  <div className="user-info">
+                    <span className="user-name">{userName || 'Janavi N N'}</span>
+                    <span className="user-role">{userRole || 'Owner'}</span>
+                  </div>
+                  <ChevronDown size={16} color="#64748b" />
+                  
+                  {showProfileMenu && (
+                    <div style={{ position: 'absolute', top: '50px', right: '0', background: '#1e1e2d', border: '1px solid #1f2330', borderRadius: '12px', width: '200px', zIndex: 100, boxShadow: '0 10px 25px rgba(0,0,0,0.5)', overflow: 'hidden', textAlign: 'left' }}>
+                      <div style={{ padding: '12px 16px', borderBottom: '1px solid #1f2330', display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <div className="avatar" style={{ background: '#3a2810', color: '#f59e0b', border: '1px solid #b48600', width: '32px', height: '32px', fontSize: '0.8rem' }}>{userName.substring(0, 2).toUpperCase() || 'JN'}</div>
+                        <div>
+                          <div style={{ fontSize: '0.85rem', fontWeight: 600, color: '#f8fafc' }}>{userName || 'User'}</div>
+                          <div style={{ fontSize: '0.7rem', color: '#64748b' }}>{userRole}</div>
+                        </div>
+                      </div>
+                      <div style={{ padding: '8px' }}>
+                        <div onClick={(e) => { e.stopPropagation(); navigate('/settings'); }} style={{ padding: '10px 12px', borderRadius: '6px', fontSize: '0.85rem', color: '#d1d5db', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', transition: 'all 0.2s' }} onMouseOver={(e) => e.currentTarget.style.background = '#2c2d3a'} onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}>
+                          <Settings size={16} /> Settings
+                        </div>
+                        <div onClick={(e) => { e.stopPropagation(); handleLogout(); }} style={{ padding: '10px 12px', borderRadius: '6px', fontSize: '0.85rem', color: '#ef4444', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', transition: 'all 0.2s', marginTop: '4px' }} onMouseOver={(e) => e.currentTarget.style.background = 'rgba(239, 68, 68, 0.1)'} onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}>
+                          <LogOut size={16} /> Log out
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
           </header>
         )}
 
