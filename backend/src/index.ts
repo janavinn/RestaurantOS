@@ -35,6 +35,11 @@ app.post('/api/admin/setup', async (req: Request, res: Response): Promise<any> =
   if (!restaurantName || !ownerName || !ownerEmail || !password) return res.status(400).json({ error: 'All fields required' });
 
   try {
+    const restaurantCount = await prisma.restaurant.count();
+    if (restaurantCount > 0) {
+      return res.status(403).json({ error: 'System already initialized. Only one restaurant owner is permitted.' });
+    }
+
     const existing = await prisma.user.findUnique({ where: { email: ownerEmail } });
     if (existing) return res.status(400).json({ error: 'User already exists' });
 
