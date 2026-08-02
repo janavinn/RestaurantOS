@@ -175,7 +175,14 @@ export default function Dashboard() {
         <div className="dashboard-card overview-card">
           <div className="card-header">
             <h3>Business Overview</h3>
-            <select className="date-select"><option>This Month</option></select>
+            <select className="date-select" defaultValue="this_month">
+              <option value="today">Today</option>
+              <option value="this_week">This Week</option>
+              <option value="this_month">This Month</option>
+              <option value="last_month">Last Month</option>
+              <option value="this_year">This Year</option>
+              <option value="all_time">All Time</option>
+            </select>
           </div>
           <div className="overview-grid">
             <div className="overview-item">
@@ -277,7 +284,14 @@ export default function Dashboard() {
         <div className="dashboard-card chart-card">
           <div className="card-header">
             <h3>Sales Trend (Last 7 Days)</h3>
-            <select className="date-select"><option>This Week</option></select>
+            <select className="date-select" defaultValue="this_week">
+              <option value="today">Today</option>
+              <option value="this_week">This Week</option>
+              <option value="this_month">This Month</option>
+              <option value="last_month">Last Month</option>
+              <option value="this_year">This Year</option>
+              <option value="all_time">All Time</option>
+            </select>
           </div>
           <div className="chart-container" style={{ height: '300px', marginTop: '20px' }}>
             <ResponsiveContainer width="100%" height="100%">
@@ -295,7 +309,14 @@ export default function Dashboard() {
         <div className="dashboard-card top-menu-card">
           <div className="card-header">
             <h3>Top Selling Menu Items</h3>
-            <select className="date-select"><option>This Month</option></select>
+            <select className="date-select" defaultValue="this_month">
+              <option value="today">Today</option>
+              <option value="this_week">This Week</option>
+              <option value="this_month">This Month</option>
+              <option value="last_month">Last Month</option>
+              <option value="this_year">This Year</option>
+              <option value="all_time">All Time</option>
+            </select>
           </div>
           <table className="menu-table">
             <thead>
