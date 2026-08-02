@@ -82,7 +82,11 @@ router.post('/invite', authenticate, async (req: Request, res: Response): Promis
     // Check if user already exists
     const existing = await prisma.user.findUnique({ where: { email } });
     if (existing) {
-      return res.status(400).json({ error: 'Email already exists' });
+      if (existing.restaurantId === restaurantId) {
+        return res.status(400).json({ error: 'This staff member is already added to your restaurant.' });
+      } else {
+        return res.status(400).json({ error: 'This email is already registered to another restaurant in the system.' });
+      }
     }
 
     const restaurant = await prisma.restaurant.findUnique({ where: { id: restaurantId } });
