@@ -75,9 +75,9 @@ npm run dev
 Since the application uses distinct Role-Based Portals, follow this exact flow to explore the features:
 
 **Step 1: Setup Owner Account**
-1. Navigate to the Registration Page: `http://localhost:5173/register` (or the Live Frontend URL `/register`).
+1. Navigate to the Registration Page: [https://restaurant-os-fjqs.vercel.app/register](https://restaurant-os-fjqs.vercel.app/register)
 2. Fill out the details to initialize the Restaurant and create the **Owner** account.
-3. Login using the Owner Portal: `http://localhost:5173/aarunya/owner/login`.
+3. Login using the Owner Portal: [https://restaurant-os-fjqs.vercel.app/aarunya/owner/login](https://restaurant-os-fjqs.vercel.app/aarunya/owner/login)
 
 **Step 2: Create Staff Accounts**
 1. From the Owner Dashboard, navigate to **Staff Management**.
@@ -86,7 +86,7 @@ Since the application uses distinct Role-Based Portals, follow this exact flow t
 
 **Step 3: Login as Staff**
 1. Open a new incognito window (or log out).
-2. Navigate to the specific **Staff Portal**: `http://localhost:5173/aarunya/staff/login`.
+2. Navigate to the specific **Staff Portal**: [https://restaurant-os-fjqs.vercel.app/aarunya/staff/login](https://restaurant-os-fjqs.vercel.app/aarunya/staff/login)
 3. Login using the credentials you just created for the staff member to view their role-specific dashboard!
 
 ---
