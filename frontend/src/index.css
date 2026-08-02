@@ -1218,7 +1218,7 @@ body {
    ========================================= */
 
 @media (max-width: 1024px) {
-  .layout-container {
+  .dashboard-layout {
     flex-direction: column !important;
   }
   
