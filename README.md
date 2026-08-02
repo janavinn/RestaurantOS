@@ -71,9 +71,23 @@ Start the frontend development server:
 npm run dev
 \`\`\`
 
-### 4. Testing the App
-1. Go to `http://localhost:5173/register` to initialize your first Restaurant and Owner account.
-2. Login to the Owner Dashboard to create staff roles and manage your menu.
+### 4. How to Test the Application
+Since the application uses distinct Role-Based Portals, follow this exact flow to explore the features:
+
+**Step 1: Setup Owner Account**
+1. Navigate to the Registration Page: `http://localhost:5173/register` (or the Live Frontend URL `/register`).
+2. Fill out the details to initialize the Restaurant and create the **Owner** account.
+3. Login using the Owner Portal: `http://localhost:5173/aarunya/owner/login`.
+
+**Step 2: Create Staff Accounts**
+1. From the Owner Dashboard, navigate to **Staff Management**.
+2. Click **Add Staff** and create a new staff member (e.g., Waiter, Chef, Manager).
+3. Set their temporary password or PIN.
+
+**Step 3: Login as Staff**
+1. Open a new incognito window (or log out).
+2. Navigate to the specific **Staff Portal**: `http://localhost:5173/aarunya/staff/login`.
+3. Login using the credentials you just created for the staff member to view their role-specific dashboard!
 
 ---
 *Built as part of the Full Stack Developer Technical Assessment.*
