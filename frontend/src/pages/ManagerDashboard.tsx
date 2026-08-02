@@ -31,7 +31,7 @@ export default function ManagerDashboard() {
 
     const fetchMetrics = async () => {
       try {
-        const res = await fetch('/api/manager/dashboard', {
+        const res = await fetch((import.meta.env.VITE_API_URL || '') + '/api/manager/dashboard', {
           headers: { Authorization: `Bearer ${token}` }
         });
         if (res.ok) {

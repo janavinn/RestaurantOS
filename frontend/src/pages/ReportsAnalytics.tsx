@@ -16,7 +16,7 @@ export default function ReportsAnalytics() {
     const fetchAnalytics = async () => {
       try {
         const token = localStorage.getItem('token');
-        const res = await fetch('/api/reports/analytics', {
+        const res = await fetch((import.meta.env.VITE_API_URL || '') + '/api/reports/analytics', {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         if (res.ok) {

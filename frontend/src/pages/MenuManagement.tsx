@@ -45,8 +45,8 @@ export default function MenuManagement() {
       const headers = { 'Authorization': `Bearer ${token}` };
       
       const [catRes, itemsRes] = await Promise.all([
-        fetch('/api/menu/categories', { headers }),
-        fetch('/api/menu', { headers })
+        fetch((import.meta.env.VITE_API_URL || '') + '/api/menu/categories', { headers }),
+        fetch((import.meta.env.VITE_API_URL || '') + '/api/menu', { headers })
       ]);
 
       if (catRes.ok && itemsRes.ok) {
@@ -123,7 +123,7 @@ export default function MenuManagement() {
     if (!window.confirm('Are you sure you want to completely remove this dish?')) return;
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch(`/api/menu/${id}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/menu/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -136,7 +136,7 @@ export default function MenuManagement() {
   const toggleAvailability = async (item: MenuItem) => {
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch(`/api/menu/${item.id}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/menu/${item.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ available: !item.available })
@@ -155,7 +155,7 @@ export default function MenuManagement() {
     if (!categoryName) return;
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch('/api/menu/categories', {
+      const res = await fetch((import.meta.env.VITE_API_URL || '') + '/api/menu/categories', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ name: categoryName })
@@ -175,7 +175,7 @@ export default function MenuManagement() {
     if (!window.confirm('Delete this category? Ensure no items belong to it first.')) return;
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch(`/api/menu/categories/${id}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/menu/categories/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });

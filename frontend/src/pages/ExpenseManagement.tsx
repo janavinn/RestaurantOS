@@ -16,7 +16,7 @@ export default function ExpenseManagement() {
   const fetchExpenses = async () => {
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch('/api/expenses', {
+      const res = await fetch((import.meta.env.VITE_API_URL || '') + '/api/expenses', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (res.ok) {
@@ -43,7 +43,7 @@ export default function ExpenseManagement() {
         amount: parseFloat(newExpense.amount) || 0
       };
       
-      const res = await fetch('/api/expenses', {
+      const res = await fetch((import.meta.env.VITE_API_URL || '') + '/api/expenses', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify(payload)

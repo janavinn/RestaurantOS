@@ -11,7 +11,7 @@ export default function BillingDashboard() {
 
   const fetchTables = async () => {
     try {
-      const res = await fetch('/api/tables', {
+      const res = await fetch((import.meta.env.VITE_API_URL || '') + '/api/tables', {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       });
       const data = await res.json();
@@ -42,7 +42,7 @@ export default function BillingDashboard() {
     setIsProcessing(true);
     
     try {
-      await fetch(`/api/orders/${selectedTable.orders[0].id}/status`, {
+      await fetch(`${import.meta.env.VITE_API_URL || ''}/api/orders/${selectedTable.orders[0].id}/status`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

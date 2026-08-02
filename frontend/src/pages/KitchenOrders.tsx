@@ -13,7 +13,7 @@ export default function ChefDashboard() {
 
   const fetchOrders = async () => {
     try {
-      const res = await fetch('/api/orders/active', { 
+      const res = await fetch((import.meta.env.VITE_API_URL || '') + '/api/orders/active', { 
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       });
       if (res.ok) {
@@ -21,7 +21,7 @@ export default function ChefDashboard() {
         setOrders(data);
       }
       
-      const resStats = await fetch('/api/orders/transactions', { 
+      const resStats = await fetch((import.meta.env.VITE_API_URL || '') + '/api/orders/transactions', { 
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       });
       if (resStats.ok) {
@@ -44,7 +44,7 @@ export default function ChefDashboard() {
 
   const updateOrderStatus = async (id: string, status: string) => {
     try {
-      await fetch(`/api/orders/${id}/status`, {
+      await fetch(`${import.meta.env.VITE_API_URL || ''}/api/orders/${id}/status`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('token')}` },
         body: JSON.stringify({ status })

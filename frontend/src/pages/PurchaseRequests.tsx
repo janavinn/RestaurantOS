@@ -13,7 +13,7 @@ export default function PurchaseRequests() {
   const fetchRequests = async () => {
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch('/api/purchase-requests', {
+      const res = await fetch((import.meta.env.VITE_API_URL || '') + '/api/purchase-requests', {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (res.ok) {
@@ -41,7 +41,7 @@ export default function PurchaseRequests() {
     const token = localStorage.getItem('token');
     
     try {
-      const res = await fetch('/api/purchase-requests', {
+      const res = await fetch((import.meta.env.VITE_API_URL || '') + '/api/purchase-requests', {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
@@ -63,7 +63,7 @@ export default function PurchaseRequests() {
   const handleUpdateStatus = async (id: string, status: string) => {
     const token = localStorage.getItem('token');
     try {
-      const res = await fetch(`/api/purchase-requests/${id}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/purchase-requests/${id}`, {
         method: 'PUT',
         headers: { 
           'Content-Type': 'application/json',

@@ -12,7 +12,7 @@ export default function CashierPayments() {
 
   const fetchOrders = async () => {
     try {
-      const res = await fetch('/api/orders/active', {
+      const res = await fetch((import.meta.env.VITE_API_URL || '') + '/api/orders/active', {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       });
       const data = await res.json();
@@ -35,7 +35,7 @@ export default function CashierPayments() {
     setIsProcessing(true);
     
     try {
-      await fetch(`/api/orders/${selectedOrder.id}/status`, {
+      await fetch(`${import.meta.env.VITE_API_URL || ''}/api/orders/${selectedOrder.id}/status`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

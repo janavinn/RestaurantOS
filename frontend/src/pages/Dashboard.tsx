@@ -19,7 +19,7 @@ export default function Dashboard() {
     const fetchData = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch('/api/dashboard', {
+        const response = await fetch((import.meta.env.VITE_API_URL || '') + '/api/dashboard', {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -217,7 +217,7 @@ export default function Dashboard() {
                 <div style={{ display: 'flex', gap: '8px' }}>
                   <button onClick={async () => {
                     const token = localStorage.getItem('token');
-                    await fetch(`/api/purchase-requests/${item.id}`, {
+                    await fetch(`${import.meta.env.VITE_API_URL || ''}/api/purchase-requests/${item.id}`, {
                       method: 'PUT', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                       body: JSON.stringify({ status: 'OWNER_APPROVED' })
                     });
@@ -225,7 +225,7 @@ export default function Dashboard() {
                   }} style={{ background: '#143d23', color: '#22c55e', border: 'none', padding: '6px 12px', borderRadius: '6px', fontSize: '0.75rem', fontWeight: 600, cursor: 'pointer' }}>Approve</button>
                   <button onClick={async () => {
                     const token = localStorage.getItem('token');
-                    await fetch(`/api/purchase-requests/${item.id}`, {
+                    await fetch(`${import.meta.env.VITE_API_URL || ''}/api/purchase-requests/${item.id}`, {
                       method: 'PUT', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                       body: JSON.stringify({ status: 'REJECTED' })
                     });

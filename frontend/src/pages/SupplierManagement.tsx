@@ -18,8 +18,8 @@ export default function SupplierManagement() {
     try {
       const token = localStorage.getItem('token');
       const [resSuppliers, resActivities] = await Promise.all([
-        fetch('/api/suppliers', { headers: { 'Authorization': `Bearer ${token}` } }),
-        fetch('/api/dashboard/activities', { headers: { 'Authorization': `Bearer ${token}` } })
+        fetch((import.meta.env.VITE_API_URL || '') + '/api/suppliers', { headers: { 'Authorization': `Bearer ${token}` } }),
+        fetch((import.meta.env.VITE_API_URL || '') + '/api/dashboard/activities', { headers: { 'Authorization': `Bearer ${token}` } })
       ]);
       
       if (resSuppliers.ok) {
@@ -42,7 +42,7 @@ export default function SupplierManagement() {
   const updateStatus = async (id: string, status: string) => {
     try {
       const token = localStorage.getItem('token');
-      await fetch(`/api/suppliers/${id}/status`, {
+      await fetch(`${import.meta.env.VITE_API_URL || ''}/api/suppliers/${id}/status`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ status })
@@ -69,7 +69,7 @@ export default function SupplierManagement() {
         payables
       };
 
-      const res = await fetch('/api/suppliers', {
+      const res = await fetch((import.meta.env.VITE_API_URL || '') + '/api/suppliers', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify(payload)

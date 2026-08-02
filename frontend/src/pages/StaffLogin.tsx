@@ -46,7 +46,7 @@ export default function StaffLogin() {
   useEffect(() => {
     const fetchStaff = async () => {
       try {
-        const res = await fetch('/api/staff/public-list');
+        const res = await fetch((import.meta.env.VITE_API_URL || '') + '/api/staff/public-list');
         if (res.ok) {
           const data = await res.json();
           setStaffList(data);
@@ -80,7 +80,7 @@ export default function StaffLogin() {
     setError('');
 
     try {
-      const response = await fetch('/api/auth/pin-login', {
+      const response = await fetch((import.meta.env.VITE_API_URL || '') + '/api/auth/pin-login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId: selectedUser.id, pin })

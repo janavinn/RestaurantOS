@@ -23,7 +23,7 @@ export default function DailyReports() {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch(`/api/manager/daily-reports?period=${period}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/manager/daily-reports?period=${period}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (res.ok) {

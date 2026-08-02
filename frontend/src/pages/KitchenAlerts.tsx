@@ -22,7 +22,7 @@ export default function KitchenAlerts() {
       const token = localStorage.getItem('token');
       
       // 1. Check for delayed or special orders
-      const orderRes = await fetch('/api/orders/active', { headers: { Authorization: `Bearer ${token}` } });
+      const orderRes = await fetch((import.meta.env.VITE_API_URL || '') + '/api/orders/active', { headers: { Authorization: `Bearer ${token}` } });
       if (orderRes.ok) {
         const orders = await orderRes.json();
         orders.forEach((order: any) => {
@@ -58,7 +58,7 @@ export default function KitchenAlerts() {
       }
 
       // 2. Check for Low Stock
-      const invRes = await fetch('/api/inventory', { headers: { Authorization: `Bearer ${token}` } });
+      const invRes = await fetch((import.meta.env.VITE_API_URL || '') + '/api/inventory', { headers: { Authorization: `Bearer ${token}` } });
       if (invRes.ok) {
         const inventory = await invRes.json();
         inventory.forEach((ing: any) => {

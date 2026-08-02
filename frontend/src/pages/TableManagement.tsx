@@ -26,9 +26,9 @@ export default function TableManagement() {
     try {
       const token = localStorage.getItem('token');
       const [tRes, mRes, oRes] = await Promise.all([
-        fetch('/api/tables', { headers: { Authorization: `Bearer ${token}` } }),
-        fetch('/api/menu', { headers: { Authorization: `Bearer ${token}` } }),
-        fetch('/api/orders/active', { headers: { Authorization: `Bearer ${token}` } })
+        fetch((import.meta.env.VITE_API_URL || '') + '/api/tables', { headers: { Authorization: `Bearer ${token}` } }),
+        fetch((import.meta.env.VITE_API_URL || '') + '/api/menu', { headers: { Authorization: `Bearer ${token}` } }),
+        fetch((import.meta.env.VITE_API_URL || '') + '/api/orders/active', { headers: { Authorization: `Bearer ${token}` } })
       ]);
       if (tRes.ok) setTables(await tRes.json());
       if (mRes.ok) setMenuItems(await mRes.json());
@@ -90,7 +90,7 @@ export default function TableManagement() {
     if (orderItems.length === 0 || !selectedTableId) return;
     setSubmitting(true);
     try {
-      await fetch('/api/orders', {
+      await fetch((import.meta.env.VITE_API_URL || '') + '/api/orders', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -117,7 +117,7 @@ export default function TableManagement() {
     const tableNumber = prompt('Enter new table number (e.g. 13):');
     if (!tableNumber) return;
     try {
-      await fetch('/api/tables', {
+      await fetch((import.meta.env.VITE_API_URL || '') + '/api/tables', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -132,7 +132,7 @@ export default function TableManagement() {
   const handleUpdateTableStatus = async (e: React.MouseEvent, id: string, status: string) => {
     e.stopPropagation();
     try {
-      await fetch(`/api/tables/${id}`, {
+      await fetch(`${import.meta.env.VITE_API_URL || ''}/api/tables/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

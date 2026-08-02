@@ -42,7 +42,7 @@ export default function RolePermissions() {
   const fetchRoles = async () => {
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch('/api/roles', {
+      const res = await fetch((import.meta.env.VITE_API_URL || '') + '/api/roles', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (res.ok) {
@@ -82,7 +82,7 @@ export default function RolePermissions() {
     setSaving(true);
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch(`/api/roles/${selectedRole.id}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/roles/${selectedRole.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ permissions: selectedRole.permissions })
@@ -105,7 +105,7 @@ export default function RolePermissions() {
     if (!newRoleName) return;
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch(`/api/roles`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/roles`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ roleName: newRoleName })

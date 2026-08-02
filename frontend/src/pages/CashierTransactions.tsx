@@ -8,7 +8,7 @@ export default function CashierTransactions() {
 
   const fetchTransactions = async () => {
     try {
-      const res = await fetch('/api/orders/transactions', {
+      const res = await fetch((import.meta.env.VITE_API_URL || '') + '/api/orders/transactions', {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       });
       const data = await res.json();

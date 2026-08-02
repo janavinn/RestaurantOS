@@ -18,7 +18,7 @@ export default function Register() {
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/admin/setup', {
+      const response = await fetch((import.meta.env.VITE_API_URL || '') + '/api/admin/setup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),

@@ -18,7 +18,7 @@ export default function IngredientManagement() {
 
   const fetchData = async () => {
     try {
-      const invRes = await fetch('/api/inventory', {
+      const invRes = await fetch((import.meta.env.VITE_API_URL || '') + '/api/inventory', {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       });
       if (invRes.ok) {
@@ -26,7 +26,7 @@ export default function IngredientManagement() {
         setIngredients(invData);
       }
 
-      const reqRes = await fetch('/api/purchase-requests', {
+      const reqRes = await fetch((import.meta.env.VITE_API_URL || '') + '/api/purchase-requests', {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       });
       if (reqRes.ok) {
@@ -51,7 +51,7 @@ export default function IngredientManagement() {
     if (!requestingItem || !requestQuantity) return;
 
     try {
-      await fetch('/api/purchase-requests', {
+      await fetch((import.meta.env.VITE_API_URL || '') + '/api/purchase-requests', {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
@@ -76,7 +76,7 @@ export default function IngredientManagement() {
     if (!customItemName || !customItemQuantity) return;
 
     try {
-      await fetch('/api/purchase-requests', {
+      await fetch((import.meta.env.VITE_API_URL || '') + '/api/purchase-requests', {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',

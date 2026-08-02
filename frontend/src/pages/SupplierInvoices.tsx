@@ -19,7 +19,7 @@ export default function SupplierInvoices() {
   const fetchInvoices = async () => {
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch('/api/purchase-orders', {
+      const res = await fetch((import.meta.env.VITE_API_URL || '') + '/api/purchase-orders', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (res.ok) {
@@ -46,7 +46,7 @@ export default function SupplierInvoices() {
 
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch('/api/invoices/process', {
+      const res = await fetch((import.meta.env.VITE_API_URL || '') + '/api/invoices/process', {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}` },
         body: formData
@@ -71,7 +71,7 @@ export default function SupplierInvoices() {
   const handleConfirmInvoice = async () => {
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch('/api/invoices/confirm', {
+      const res = await fetch((import.meta.env.VITE_API_URL || '') + '/api/invoices/confirm', {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
@@ -95,7 +95,7 @@ export default function SupplierInvoices() {
   const handleUpdateStatus = async (id: string, status: string) => {
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch(`/api/purchase-orders/${id}/status`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/purchase-orders/${id}/status`, {
         method: 'PUT',
         headers: { 
           'Content-Type': 'application/json',
@@ -115,7 +115,7 @@ export default function SupplierInvoices() {
   const handleExport = async () => {
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch('/api/invoices/export', {
+      const res = await fetch((import.meta.env.VITE_API_URL || '') + '/api/invoices/export', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (res.ok) {

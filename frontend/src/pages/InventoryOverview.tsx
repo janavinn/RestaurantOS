@@ -30,7 +30,7 @@ export default function InventoryOverview() {
   const fetchInventory = async () => {
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch('/api/inventory', {
+      const res = await fetch((import.meta.env.VITE_API_URL || '') + '/api/inventory', {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (res.ok) {
@@ -61,7 +61,7 @@ export default function InventoryOverview() {
     setRequestStatus('submitting');
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch('/api/purchase-requests', {
+      const res = await fetch((import.meta.env.VITE_API_URL || '') + '/api/purchase-requests', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

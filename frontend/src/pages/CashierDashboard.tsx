@@ -13,7 +13,7 @@ export default function CashierDashboard() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const res = await fetch('/api/orders/cashier-stats', {
+        const res = await fetch((import.meta.env.VITE_API_URL || '') + '/api/orders/cashier-stats', {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
         });
         const data = await res.json();

@@ -36,7 +36,7 @@ export default function StaffManagement() {
   const fetchStaff = async () => {
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch('/api/staff', {
+      const res = await fetch((import.meta.env.VITE_API_URL || '') + '/api/staff', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (res.ok) {
@@ -63,7 +63,7 @@ export default function StaffManagement() {
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch('/api/staff/invite', {
+      const res = await fetch((import.meta.env.VITE_API_URL || '') + '/api/staff/invite', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -104,7 +104,7 @@ export default function StaffManagement() {
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch(`/api/staff/${editForm.id}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/staff/${editForm.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify(editForm)
@@ -130,7 +130,7 @@ export default function StaffManagement() {
   const handleQuickUpdate = async (id: string, field: string, value: string) => {
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch(`/api/staff/${id}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/staff/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ [field]: value })
@@ -147,7 +147,7 @@ export default function StaffManagement() {
     if (!window.confirm('Are you sure you want to remove this staff member?')) return;
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch(`/api/staff/${id}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/staff/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });

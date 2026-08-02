@@ -43,13 +43,13 @@ export default function StoreKeeperDashboard() {
     try {
       const token = localStorage.getItem('token');
       // Fetch Inventory
-      const invRes = await fetch('/api/inventory', {
+      const invRes = await fetch((import.meta.env.VITE_API_URL || '') + '/api/inventory', {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (invRes.ok) setInventory(await invRes.json());
 
       // Fetch Purchase Requests
-      const prRes = await fetch('/api/purchase-requests', {
+      const prRes = await fetch((import.meta.env.VITE_API_URL || '') + '/api/purchase-requests', {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (prRes.ok) setRequests(await prRes.json());
@@ -78,7 +78,7 @@ export default function StoreKeeperDashboard() {
 
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch(`/api/inventory/${selectedItem}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/inventory/${selectedItem}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -102,7 +102,7 @@ export default function StoreKeeperDashboard() {
   const handleCompleteRequest = async (id: string, itemName: string) => {
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch(`/api/purchase-requests/${id}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/purchase-requests/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

@@ -7,7 +7,7 @@ export default function WaiterOrders() {
 
   const fetchOrders = async () => {
     try {
-      const res = await fetch('/api/orders/active', {
+      const res = await fetch((import.meta.env.VITE_API_URL || '') + '/api/orders/active', {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       });
       const data = await res.json();
@@ -30,7 +30,7 @@ export default function WaiterOrders() {
 
   const handleMarkServed = async (orderId: string) => {
     try {
-      await fetch(`/api/orders/${orderId}/status`, {
+      await fetch(`${import.meta.env.VITE_API_URL || ''}/api/orders/${orderId}/status`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -49,7 +49,7 @@ export default function WaiterOrders() {
       const taxAmount = total * 0.05; // 5% GST
       const finalTotal = total + taxAmount;
       
-      await fetch(`/api/orders/${orderId}/status`, {
+      await fetch(`${import.meta.env.VITE_API_URL || ''}/api/orders/${orderId}/status`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

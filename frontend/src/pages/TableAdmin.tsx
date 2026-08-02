@@ -21,7 +21,7 @@ export default function TableAdmin() {
   const fetchTables = async () => {
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch('/api/tables', {
+      const res = await fetch((import.meta.env.VITE_API_URL || '') + '/api/tables', {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -43,7 +43,7 @@ export default function TableAdmin() {
 
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch('/api/tables', {
+      const res = await fetch((import.meta.env.VITE_API_URL || '') + '/api/tables', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -70,7 +70,7 @@ export default function TableAdmin() {
     
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch(`/api/tables/${id}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/tables/${id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
