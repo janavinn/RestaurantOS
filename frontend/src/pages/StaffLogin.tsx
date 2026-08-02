@@ -118,15 +118,19 @@ export default function StaffLogin() {
 
   return (
     <div style={{ 
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
       display: 'flex', 
-      height: '100vh', 
-      width: '100vw',
       backgroundImage: 'url(/restaurant-bg.png)',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       fontFamily: 'Inter, sans-serif',
       overflowY: 'auto',
-      overflowX: 'hidden'
+      overflowX: 'hidden',
+      zIndex: 9999
     }}>
       <style>
         {`
