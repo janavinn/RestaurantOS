@@ -475,6 +475,27 @@ export default function StaffManagement() {
                     <td style={{ padding: '16px' }}>
                       {(userRole !== 'MANAGER' || s.role !== 'MANAGER') && (
                         <div style={{ display: 'flex', gap: '6px', justifyContent: 'center' }}>
+                          {s.status === 'PENDING' && userRole === 'OWNER' && (
+                            <button className="icon-btn-outline" onClick={async () => {
+                              try {
+                                const token = localStorage.getItem('token');
+                                const res = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/staff/${s.id}/resend-invite`, {
+                                  method: 'POST',
+                                  headers: { 'Authorization': `Bearer ${token}` }
+                                });
+                                if (res.ok) {
+                                  const data = await res.json();
+                                  setInviteResult({ link: data.inviteUrl, email: s.email });
+                                  setIsModalOpen(true);
+                                } else {
+                                  alert('Failed to resend invite');
+                                }
+                              } catch (err) {
+                                console.error(err);
+                                alert('An error occurred');
+                              }
+                            }} style={{ color: '#6366f1', border: '1px solid #1e1b4b', width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#0a0a0a', borderRadius: '6px', cursor: 'pointer' }} title="Resend Invite Link"><Copy size={14} /></button>
+                          )}
                           <button className="icon-btn-outline" onClick={() => openEditModal(s)} style={{ color: '#d97706', border: '1px solid #43320f', width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#0a0a0a', borderRadius: '6px', cursor: 'pointer' }} title="Edit Staff Details"><Edit2 size={14} /></button>
                           {userRole === 'OWNER' && (
                             <button className="icon-btn-outline" onClick={() => handleDelete(s.id)} style={{ color: '#ef4444', border: '1px solid #450a0a', width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#0a0a0a', borderRadius: '6px', cursor: 'pointer' }} title="Remove Staff"><Trash2 size={14} /></button>
