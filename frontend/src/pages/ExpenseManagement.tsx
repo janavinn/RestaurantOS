@@ -96,10 +96,10 @@ export default function ExpenseManagement() {
     const avgDaily = expenses.length > 0 ? (total / 30).toFixed(0) : 0;
 
     const metrics = [
-      { id: 1, title: 'Total Expenses', value: `₹ ${total.toLocaleString('en-IN')}`, desc: 'All time', trend: '+ 2.1% vs last month', isUp: false, color: '#e11d48', bg: '#ffe4e6', spark: [50, 48, 49, 45, 42, 42] },
-      { id: 2, title: 'Highest Category', value: highestCategory, desc: `₹ ${highestValue.toLocaleString('en-IN')}`, trend: 'Consistent', isUp: false, color: '#b48600', bg: '#f3e8ff', spark: [20, 20, 21, 21, 21, 21] },
-      { id: 3, title: 'Pending Approvals', value: pendingCount.toString(), desc: 'Requires manager review', trend: '+ 1 today', isUp: false, color: '#d97706', bg: '#fef3c7', spark: [5, 4, 3, 6, 5, 8] },
-      { id: 4, title: 'Avg Daily Spend', value: `₹ ${Number(avgDaily).toLocaleString('en-IN')}`, desc: 'Operating run rate', trend: '- ₹500 vs last week', isUp: true, color: '#059669', bg: '#d1fae5', spark: [16000, 15800, 15500, 15200, 15000, 15178] },
+      { id: 1, title: 'Total Expenses', value: `₹ ${total.toLocaleString('en-IN')}`, desc: 'All time', trend: '', isUp: false, color: '#e11d48', bg: '#ffe4e6', spark: [50, 48, 49, 45, 42, 42] },
+      { id: 2, title: 'Highest Category', value: highestCategory, desc: `₹ ${highestValue.toLocaleString('en-IN')}`, trend: '', isUp: false, color: '#b48600', bg: '#f3e8ff', spark: [20, 20, 21, 21, 21, 21] },
+      { id: 3, title: 'Pending Approvals', value: pendingCount.toString(), desc: 'Requires manager review', trend: '', isUp: false, color: '#d97706', bg: '#fef3c7', spark: [5, 4, 3, 6, 5, 8] },
+      { id: 4, title: 'Avg Daily Spend', value: `₹ ${Number(avgDaily).toLocaleString('en-IN')}`, desc: 'Operating run rate', trend: '', isUp: true, color: '#059669', bg: '#d1fae5', spark: [16000, 15800, 15500, 15200, 15000, 15178] },
     ];
 
     const colors = ['#7e22ce', '#3b82f6', '#e11d48', '#f59e0b', '#10b981', '#6366f1'];
@@ -150,9 +150,11 @@ export default function ExpenseManagement() {
                 <div style={{ color: '#94a3b8', fontSize: '0.85rem', fontWeight: 500 }}>{metric.title}</div>
                 <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#f8fafc', margin: '4px 0' }}>{metric.value}</div>
                 <div style={{ color: '#94a3b8', fontSize: '0.75rem' }}>{metric.desc}</div>
+                {metric.trend && (
                 <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem', marginTop: '8px', color: metric.isUp ? '#15803d' : '#e11d48', fontWeight: 600 }}>
                   {metric.isUp ? <ArrowUpRight size={14} /> : <ArrowDownRight size={14} />} {metric.trend}
                 </div>
+                )}
               </div>
             </div>
             <div style={{ width: '100%', height: '40px', padding: '0 12px' }}>

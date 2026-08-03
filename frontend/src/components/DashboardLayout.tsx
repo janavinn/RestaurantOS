@@ -17,11 +17,10 @@ export default function DashboardLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
-  const [notifications, setNotifications] = useState([
-    { id: 1, text: 'New order received (#1042)', time: '2m ago', unread: true },
-    { id: 2, text: 'Inventory alert: Tomatoes low', time: '1h ago', unread: true },
-    { id: 3, text: 'Purchase request approved', time: '2h ago', unread: false }
-  ]);
+  const [notifications, setNotifications] = useState<any[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<any>({ menuItems: [], staff: [], orders: [], suppliers: [] });
+  const [showSearch, setShowSearch] = useState(false);
 
   const basePath = `/${urlRole}/${urlUsername}`;
 
@@ -37,7 +36,60 @@ export default function DashboardLayout() {
       setUserName(user.name || 'Owner');
       setUserRole(user.role || 'OWNER');
     }
-  }, [navigate]);
+
+    fetchNotifications();
+  }, [navigate, urlRole]);
+
+  const fetchNotifications = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const res = await fetch((import.meta.env.VITE_API_URL || '') + '/api/notifications', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setNotifications(data);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const markAllRead = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      await fetch((import.meta.env.VITE_API_URL || '') + '/api/notifications/mark-read', {
+        method: 'PUT',
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setNotifications(notifications.map(n => ({ ...n, isRead: true })));
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  useEffect(() => {
+    if (!searchQuery) {
+      setShowSearch(false);
+      return;
+    }
+    const timeoutId = setTimeout(async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const res = await fetch((import.meta.env.VITE_API_URL || '') + `/api/search?q=${encodeURIComponent(searchQuery)}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          setSearchResults(data);
+          setShowSearch(true);
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }, 300);
+    return () => clearTimeout(timeoutId);
+  }, [searchQuery]);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -306,30 +358,95 @@ export default function DashboardLayout() {
         {!['CHEF', 'WAITER'].includes(userRole) && (
           <header className="top-header" style={{ display: 'flex', justifyContent: 'space-between', padding: '0 32px' }}>
             <div className="header-left" style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
-              <div className="search-bar" style={{ width: '400px' }}>
-                <input type="text" placeholder="Search anything..." style={{ width: '100%', background: 'transparent', border: 'none', outline: 'none' }} />
+              <div className="search-bar" style={{ width: '400px', position: 'relative' }}>
+                <input 
+                  type="text" 
+                  placeholder="Search anything..." 
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onFocus={() => searchQuery && setShowSearch(true)}
+                  style={{ width: '100%', background: 'transparent', border: 'none', outline: 'none', color: '#f8fafc' }} 
+                />
                 <Search size={18} color="#94a3b8" />
+                
+                {/* Search Dropdown */}
+                {showSearch && (
+                  <div style={{ position: 'absolute', top: '100%', marginTop: '8px', left: 0, width: '100%', background: '#1e1e2d', border: '1px solid #1f2330', borderRadius: '12px', zIndex: 100, boxShadow: '0 10px 25px rgba(0,0,0,0.5)', overflow: 'hidden' }}>
+                    
+                    {searchResults.menuItems?.length > 0 && (
+                      <div style={{ padding: '8px 0' }}>
+                        <div style={{ padding: '4px 16px', fontSize: '0.75rem', fontWeight: 600, color: '#64748b', textTransform: 'uppercase' }}>Menu Items</div>
+                        {searchResults.menuItems.map((item: any) => (
+                          <div key={item.id} onClick={() => { setShowSearch(false); navigate(`${basePath}/menu`); }} style={{ padding: '8px 16px', fontSize: '0.85rem', color: '#f8fafc', cursor: 'pointer' }} onMouseOver={(e) => e.currentTarget.style.background = '#2c2d3a'} onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}>
+                            {item.name}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    
+                    {searchResults.staff?.length > 0 && (
+                      <div style={{ padding: '8px 0', borderTop: '1px solid #1f2330' }}>
+                        <div style={{ padding: '4px 16px', fontSize: '0.75rem', fontWeight: 600, color: '#64748b', textTransform: 'uppercase' }}>Staff</div>
+                        {searchResults.staff.map((s: any) => (
+                          <div key={s.id} onClick={() => { setShowSearch(false); navigate(`${basePath}/staff`); }} style={{ padding: '8px 16px', fontSize: '0.85rem', color: '#f8fafc', cursor: 'pointer' }} onMouseOver={(e) => e.currentTarget.style.background = '#2c2d3a'} onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}>
+                            {s.name} ({s.role})
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {searchResults.orders?.length > 0 && (
+                      <div style={{ padding: '8px 0', borderTop: '1px solid #1f2330' }}>
+                        <div style={{ padding: '4px 16px', fontSize: '0.75rem', fontWeight: 600, color: '#64748b', textTransform: 'uppercase' }}>Orders</div>
+                        {searchResults.orders.map((o: any) => (
+                          <div key={o.id} style={{ padding: '8px 16px', fontSize: '0.85rem', color: '#f8fafc', cursor: 'pointer' }} onMouseOver={(e) => e.currentTarget.style.background = '#2c2d3a'} onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}>
+                            Order #{o.id.substring(0, 6)} - {o.status}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {searchResults.suppliers?.length > 0 && (
+                      <div style={{ padding: '8px 0', borderTop: '1px solid #1f2330' }}>
+                        <div style={{ padding: '4px 16px', fontSize: '0.75rem', fontWeight: 600, color: '#64748b', textTransform: 'uppercase' }}>Suppliers</div>
+                        {searchResults.suppliers.map((s: any) => (
+                          <div key={s.id} onClick={() => { setShowSearch(false); navigate(`${basePath}/suppliers`); }} style={{ padding: '8px 16px', fontSize: '0.85rem', color: '#f8fafc', cursor: 'pointer' }} onMouseOver={(e) => e.currentTarget.style.background = '#2c2d3a'} onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}>
+                            {s.name}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {(!searchResults.menuItems?.length && !searchResults.staff?.length && !searchResults.orders?.length && !searchResults.suppliers?.length) && (
+                      <div style={{ padding: '16px', fontSize: '0.85rem', color: '#94a3b8', textAlign: 'center' }}>No results found for "{searchQuery}"</div>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
                         <div className="header-actions">
                 <div className="notification-bell" style={{ position: 'relative', cursor: 'pointer' }} onClick={() => { setShowNotifications(!showNotifications); setShowProfileMenu(false); }}>
                   <Bell size={20} color="#64748b" />
-                  {notifications.filter(n => n.unread).length > 0 && (
-                    <span className="badge" style={{ background: '#7e22ce' }}>{notifications.filter(n => n.unread).length}</span>
+                  {notifications.filter(n => !n.isRead).length > 0 && (
+                    <span className="badge" style={{ background: '#7e22ce' }}>{notifications.filter(n => !n.isRead).length}</span>
                   )}
                   {showNotifications && (
                     <div style={{ position: 'absolute', top: '40px', right: '0', background: '#1e1e2d', border: '1px solid #1f2330', borderRadius: '12px', width: '320px', zIndex: 100, boxShadow: '0 10px 25px rgba(0,0,0,0.5)', overflow: 'hidden' }}>
                       <div style={{ padding: '12px 16px', borderBottom: '1px solid #1f2330', fontSize: '0.85rem', fontWeight: 600, color: '#f8fafc', display: 'flex', justifyContent: 'space-between' }}>
                         <span>Notifications</span>
-                        <span style={{ color: '#6366f1', cursor: 'pointer' }} onClick={(e) => { e.stopPropagation(); setNotifications(notifications.map(n => ({...n, unread: false}))); }}>Mark all read</span>
+                        <span style={{ color: '#6366f1', cursor: 'pointer' }} onClick={(e) => { e.stopPropagation(); markAllRead(); }}>Mark all read</span>
                       </div>
                       <div style={{ maxHeight: '300px', overflowY: 'auto' }}>
-                        {notifications.map(n => (
-                          <div key={n.id} style={{ padding: '12px 16px', borderBottom: '1px solid #1f2330', background: n.unread ? 'rgba(99, 102, 241, 0.1)' : 'transparent', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                            <div style={{ fontSize: '0.85rem', color: '#f8fafc' }}>{n.text}</div>
-                            <div style={{ fontSize: '0.7rem', color: '#64748b' }}>{n.time}</div>
-                          </div>
-                        ))}
+                        {notifications.length === 0 ? (
+                          <div style={{ padding: '16px', fontSize: '0.85rem', color: '#64748b', textAlign: 'center' }}>No new notifications</div>
+                        ) : (
+                          notifications.map(n => (
+                            <div key={n.id} style={{ padding: '12px 16px', borderBottom: '1px solid #1f2330', background: !n.isRead ? 'rgba(99, 102, 241, 0.1)' : 'transparent', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                              <div style={{ fontSize: '0.85rem', color: '#f8fafc' }}>{n.message}</div>
+                              <div style={{ fontSize: '0.7rem', color: '#64748b' }}>{new Date(n.createdAt).toLocaleString()}</div>
+                            </div>
+                          ))
+                        )}
                       </div>
                     </div>
                   )}

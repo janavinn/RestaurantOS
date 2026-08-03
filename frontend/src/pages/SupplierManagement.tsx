@@ -126,10 +126,10 @@ export default function SupplierManagement() {
     ];
 
     const metrics = [
-      { id: 1, title: 'Total Suppliers', value: suppliers.length.toString(), desc: 'Total registered', trend: '+ 1 this week', isUp: true, color: '#b48600', bg: '#f3e8ff', spark: [10, 15, 12, 18, 20, 24] },
-      { id: 2, title: 'Total Purchases', value: `₹ ${purchases.toLocaleString('en-IN')}`, desc: 'Lifetime purchases', trend: '+ 8.6% vs last month', isUp: true, color: '#059669', bg: '#d1fae5', spark: [40, 50, 45, 60, 55, 75] },
-      { id: 3, title: 'Total Payables', value: `₹ ${payables.toLocaleString('en-IN')}`, desc: 'Across all suppliers', trend: '- 5.4% vs last month', isUp: false, color: '#d97706', bg: '#fef3c7', spark: [30, 28, 35, 25, 22, 20] },
-      { id: 4, title: 'Overdue Suppliers', value: overdueCount.toString(), desc: 'Need attention', trend: '+ 2 vs last month', isUp: false, color: '#e11d48', bg: '#ffe4e6', spark: [5, 4, 6, 7, 5, 8] },
+      { id: 1, title: 'Total Suppliers', value: suppliers.length.toString(), desc: 'Total registered', trend: '', isUp: true, color: '#b48600', bg: '#f3e8ff', spark: [10, 15, 12, 18, 20, 24] },
+      { id: 2, title: 'Total Purchases', value: `₹ ${purchases.toLocaleString('en-IN')}`, desc: 'Lifetime purchases', trend: '', isUp: true, color: '#059669', bg: '#d1fae5', spark: [40, 50, 45, 60, 55, 75] },
+      { id: 3, title: 'Total Payables', value: `₹ ${payables.toLocaleString('en-IN')}`, desc: 'Across all suppliers', trend: '', isUp: false, color: '#d97706', bg: '#fef3c7', spark: [30, 28, 35, 25, 22, 20] },
+      { id: 4, title: 'Overdue Suppliers', value: overdueCount.toString(), desc: 'Need attention', trend: '', isUp: false, color: '#e11d48', bg: '#ffe4e6', spark: [5, 4, 6, 7, 5, 8] },
     ];
 
     return { totalPurchases: purchases, totalPayables: payables, topSuppliers: top, invoicesData: invData, metricsData: metrics };
@@ -175,9 +175,11 @@ export default function SupplierManagement() {
                 <div style={{ color: '#94a3b8', fontSize: '0.85rem', fontWeight: 500 }}>{metric.title}</div>
                 <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#f8fafc', margin: '4px 0' }}>{metric.value}</div>
                 <div style={{ color: '#94a3b8', fontSize: '0.75rem' }}>{metric.desc}</div>
+                {metric.trend && (
                 <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem', marginTop: '8px', color: metric.isUp ? '#15803d' : '#e11d48', fontWeight: 600 }}>
                   {metric.isUp ? <ArrowUpRight size={14} /> : <ArrowDownRight size={14} />} {metric.trend}
                 </div>
+                )}
               </div>
             </div>
             {/* Sparkline */}
