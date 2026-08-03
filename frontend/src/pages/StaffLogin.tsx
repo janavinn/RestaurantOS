@@ -111,6 +111,25 @@ export default function StaffLogin() {
     }
   };
 
+  const handleForgotPin = async () => {
+    if (!selectedUser) return;
+    try {
+      const res = await fetch((import.meta.env.VITE_API_URL || '') + '/api/auth/forgot-pin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: selectedUser.id })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        alert('A PIN reset link has been sent to your email.');
+      } else {
+        alert(data.error || 'Failed to send reset link');
+      }
+    } catch (e) {
+      alert('Network error');
+    }
+  };
+
   const defaultRoles = Object.keys(roleConfig);
   const uniqueRoles = Array.from(new Set([...defaultRoles, ...staffList.map(s => s.role)]));
   const filteredRoles = uniqueRoles.filter(role => role.toLowerCase().includes(searchQuery.toLowerCase()));
@@ -411,6 +430,13 @@ export default function StaffLogin() {
                   <Delete size={20} />
                 </button>
               </div>
+
+              <button 
+                onClick={handleForgotPin}
+                style={{ marginTop: '16px', background: 'transparent', border: 'none', color: '#6366f1', fontSize: '0.9rem', cursor: 'pointer', textDecoration: 'underline', marginBottom: 'auto' }}
+              >
+                Forgot PIN?
+              </button>
             </div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', flex: 1 }}>

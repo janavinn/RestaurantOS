@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Mail, Lock, EyeOff, User, BarChart2, Package, Users, FileText, LayoutDashboard } from 'lucide-react';
 
@@ -12,6 +12,18 @@ export default function Register() {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isInitialized, setIsInitialized] = useState(false);
+  const [checkingInit, setCheckingInit] = useState(true);
+
+  React.useEffect(() => {
+    fetch((import.meta.env.VITE_API_URL || '') + '/api/admin/is-initialized')
+      .then(res => res.json())
+      .then(data => {
+        setIsInitialized(data.initialized);
+        setCheckingInit(false);
+      })
+      .catch(() => setCheckingInit(false));
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -112,76 +124,88 @@ export default function Register() {
           <h2 className="login-title">Owner Registration</h2>
           <p className="login-subtitle">Create an account to set up your restaurant</p>
 
-          <form onSubmit={handleSubmit} className="login-form">
-            <div className="input-group">
-              <label>Restaurant Name</label>
-              <div className="input-with-icon">
-                <LayoutDashboard size={18} className="input-icon" />
-                <input 
-                  type="text" 
-                  name="restaurantName" 
-                  value={formData.restaurantName}
-                  required 
-                  readOnly
-                  style={{ backgroundColor: '#f8fafc', color: '#64748b' }}
-                />
-              </div>
+          {checkingInit ? (
+            <div style={{ textAlign: 'center', padding: '40px' }}>Loading...</div>
+          ) : isInitialized ? (
+            <div style={{ textAlign: 'center', padding: '40px', backgroundColor: '#fef2f2', border: '1px solid #f87171', borderRadius: '12px', marginTop: '24px' }}>
+              <h3 style={{ color: '#b91c1c', marginBottom: '12px' }}>Registration Closed</h3>
+              <p style={{ color: '#7f1d1d', marginBottom: '24px', fontSize: '0.9rem' }}>The system has already been initialized with an Owner account. Only one Owner is permitted.</p>
+              <button className="btn-signin" onClick={() => navigate('/aarunya/owner/login')}>
+                Go to Login
+              </button>
             </div>
-
-            <div className="input-group">
-              <label>Full Name</label>
-              <div className="input-with-icon">
-                <User size={18} className="input-icon" />
-                <input 
-                  type="text" 
-                  name="ownerName" 
-                  placeholder="Enter your name" 
-                  required 
-                  onChange={handleChange} 
-                />
+          ) : (
+            <form onSubmit={handleSubmit} className="login-form">
+              <div className="input-group">
+                <label>Restaurant Name</label>
+                <div className="input-with-icon">
+                  <LayoutDashboard size={18} className="input-icon" />
+                  <input 
+                    type="text" 
+                    name="restaurantName" 
+                    value={formData.restaurantName}
+                    required 
+                    readOnly
+                    style={{ backgroundColor: '#f8fafc', color: '#64748b' }}
+                  />
+                </div>
               </div>
-            </div>
 
-            <div className="input-group">
-              <label>Email Address</label>
-              <div className="input-with-icon">
-                <Mail size={18} className="input-icon" />
-                <input 
-                  type="email" 
-                  name="ownerEmail" 
-                  placeholder="Enter your email" 
-                  required 
-                  onChange={handleChange} 
-                />
+              <div className="input-group">
+                <label>Full Name</label>
+                <div className="input-with-icon">
+                  <User size={18} className="input-icon" />
+                  <input 
+                    type="text" 
+                    name="ownerName" 
+                    placeholder="Enter your name" 
+                    required 
+                    onChange={handleChange} 
+                  />
+                </div>
               </div>
-            </div>
 
-            <div className="input-group">
-              <label>Password</label>
-              <div className="input-with-icon">
-                <Lock size={18} className="input-icon" />
-                <input 
-                  type={showPassword ? "text" : "password"} 
-                  name="password" 
-                  placeholder="Create a password" 
-                  required 
-                  minLength={6}
-                  onChange={handleChange} 
-                />
-                <button 
-                  type="button" 
-                  className="icon-btn right" 
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  <EyeOff size={18} color="#94a3b8" />
-                </button>
+              <div className="input-group">
+                <label>Email Address</label>
+                <div className="input-with-icon">
+                  <Mail size={18} className="input-icon" />
+                  <input 
+                    type="email" 
+                    name="ownerEmail" 
+                    placeholder="Enter your email" 
+                    required 
+                    onChange={handleChange} 
+                  />
+                </div>
               </div>
-            </div>
 
-            <button type="submit" className="btn-signin" disabled={isLoading} style={{ marginTop: '20px' }}>
-               Create Workspace
-            </button>
-          </form>
+              <div className="input-group">
+                <label>Password</label>
+                <div className="input-with-icon">
+                  <Lock size={18} className="input-icon" />
+                  <input 
+                    type={showPassword ? "text" : "password"} 
+                    name="password" 
+                    placeholder="Create a password" 
+                    required 
+                    minLength={6}
+                    onChange={handleChange} 
+                  />
+                  <button 
+                    type="button" 
+                    className="icon-btn right" 
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    <EyeOff size={18} color="#94a3b8" />
+                  </button>
+                </div>
+              </div>
+
+              <button type="submit" className="btn-signin" disabled={isLoading} style={{ marginTop: '20px' }}>
+                 Create Workspace
+              </button>
+            </form>
+          )}
 
           <div className="divider"><span>or</span></div>
           

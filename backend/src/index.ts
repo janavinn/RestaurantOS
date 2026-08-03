@@ -36,11 +36,11 @@ app.post('/api/admin/setup', async (req: Request, res: Response): Promise<any> =
   if (!restaurantName || !ownerName || !ownerEmail || !password) return res.status(400).json({ error: 'All fields required' });
 
   try {
-    // === SINGLE TENANT LOCK DISABLED FOR ASSESSMENT ===
-    // const restaurantCount = await prisma.restaurant.count();
-    // if (restaurantCount > 0) {
-    //   return res.status(403).json({ error: 'System already initialized. Only one restaurant owner is permitted.' });
-    // }
+    // === SINGLE TENANT LOCK ENABLED ===
+    const restaurantCount = await prisma.restaurant.count();
+    if (restaurantCount > 0) {
+      return res.status(403).json({ error: 'System already initialized. Only one restaurant owner is permitted.' });
+    }
     // ==================================================
 
     const existing = await prisma.user.findUnique({ where: { email: ownerEmail } });
@@ -59,6 +59,24 @@ app.post('/api/admin/setup', async (req: Request, res: Response): Promise<any> =
     res.status(201).json({ message: 'Success', restaurant: result.restaurant, owner: ownerSafe });
   } catch (err) {
     res.status(500).json({ error: 'Internal error' });
+  }
+});
+
+app.get('/api/admin/is-initialized', async (req: Request, res: Response) => {
+  try {
+    const count = await prisma.restaurant.count();
+    res.json({ initialized: count > 0 });
+  } catch (err) {
+    res.status(500).json({ error: 'Internal error' });
+  }
+});
+
+app.post('/api/admin/nuke-database', async (req: Request, res: Response) => {
+  try {
+    await prisma.restaurant.deleteMany();
+    res.json({ message: 'Database wiped successfully.' });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to wipe database' });
   }
 });
 
@@ -233,6 +251,51 @@ app.post('/api/auth/pin-login', async (req: Request, res: Response): Promise<any
 });
 
 
+
+app.post('/api/auth/forgot-pin', async (req: Request, res: Response): Promise<any> => {
+  const { userId } = req.body;
+  if (!userId) return res.status(400).json({ error: 'User ID required' });
+  
+  try {
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) return res.status(404).json({ error: 'User not found' });
+    
+    const token = crypto.randomBytes(32).toString('hex');
+    const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+    
+    await prisma.user.update({
+      where: { id: userId },
+      data: {
+        activationToken: hashedToken,
+        activationExpires: new Date(Date.now() + 86400000)
+      }
+    });
+    
+    const resetUrl = `https://restaurant-os-fjqs.vercel.app/setup-account?token=${token}&role=${user.role}`;
+    
+    let transporter = nodemailer.createTransport({
+      host: 'smtp.ethereal.email',
+      port: 587,
+      auth: {
+        user: 'mylene.stehr53@ethereal.email',
+        pass: '6Q9Z5bS3Y3eT2B2mD9'
+      }
+    });
+
+    const info = await transporter.sendMail({
+      from: '"Aarunya Admin" <admin@aarunya.com>',
+      to: user.email,
+      subject: 'Staff PIN Reset Request',
+      text: `Click this link to set a new PIN: ${resetUrl}`,
+      html: `<p>Click here to set a new PIN for your staff account:</p><p><a href="${resetUrl}">${resetUrl}</a></p>`
+    });
+
+    console.log('PIN Reset Preview URL: %s', nodemailer.getTestMessageUrl(info));
+    res.json({ message: 'A PIN reset link has been sent to the registered email.' });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to process forgot pin' });
+  }
+});
 
 import dashboardRoutes from './routes/dashboard';
 import menuRoutes from './routes/menu';
