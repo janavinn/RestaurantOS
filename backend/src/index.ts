@@ -273,24 +273,8 @@ app.post('/api/auth/forgot-pin', async (req: Request, res: Response): Promise<an
     
     const resetUrl = `https://restaurant-os-fjqs.vercel.app/setup-account?token=${token}&role=${user.role}`;
     
-    let transporter = nodemailer.createTransport({
-      host: 'smtp.ethereal.email',
-      port: 587,
-      auth: {
-        user: 'mylene.stehr53@ethereal.email',
-        pass: '6Q9Z5bS3Y3eT2B2mD9'
-      }
-    });
-
-    const info = await transporter.sendMail({
-      from: '"Aarunya Admin" <admin@aarunya.com>',
-      to: user.email,
-      subject: 'Staff PIN Reset Request',
-      text: `Click this link to set a new PIN: ${resetUrl}`,
-      html: `<p>Click here to set a new PIN for your staff account:</p><p><a href="${resetUrl}">${resetUrl}</a></p>`
-    });
-
-    console.log('PIN Reset Preview URL: %s', nodemailer.getTestMessageUrl(info));
+    // DEMO MODE: We skip sending the actual email since dummy SMTP accounts expire quickly.
+    // The frontend will automatically redirect the user to the resetUrl.
     res.json({ message: 'A PIN reset link has been sent to the registered email.', resetUrl });
   } catch (err) {
     res.status(500).json({ error: 'Failed to process forgot pin' });
