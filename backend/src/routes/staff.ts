@@ -24,11 +24,17 @@ const authenticate = (req: Request, res: Response, next: any) => {
 // GET public list of active staff for the POS lock screen
 router.get('/public-list', async (req: Request, res: Response): Promise<any> => {
   try {
-    // In a multi-tenant app, we'd filter by restaurantId. Since this is a single restaurant demo, we fetch all active staff.
+    // To prevent multi-tenant data leaks on the public POS screen, we lock it to the most recently created restaurant.
+    const latestOwner = await prisma.user.findFirst({
+      where: { role: 'OWNER' },
+      orderBy: { createdAt: 'desc' }
+    });
+
     const staff = await prisma.user.findMany({
       where: { 
         status: 'ACTIVE',
-        role: { not: 'OWNER' } // Exclude owner from the PIN lock screen
+        role: { not: 'OWNER' },
+        restaurantId: latestOwner?.restaurantId
       },
       select: {
         id: true,
