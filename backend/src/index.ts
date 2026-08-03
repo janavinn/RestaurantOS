@@ -291,7 +291,7 @@ app.post('/api/auth/forgot-pin', async (req: Request, res: Response): Promise<an
     });
 
     console.log('PIN Reset Preview URL: %s', nodemailer.getTestMessageUrl(info));
-    res.json({ message: 'A PIN reset link has been sent to the registered email.' });
+    res.json({ message: 'A PIN reset link has been sent to the registered email.', resetUrl });
   } catch (err) {
     res.status(500).json({ error: 'Failed to process forgot pin' });
   }

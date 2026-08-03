@@ -121,7 +121,11 @@ export default function StaffLogin() {
       });
       const data = await res.json();
       if (res.ok) {
-        alert('A PIN reset link has been sent to your email.');
+        alert('Demo Mode: An email would normally be sent. Click OK to be redirected to the PIN reset screen.');
+        // In a real app we wouldn't return the URL, but for the demo we redirect automatically
+        if (data.resetUrl) {
+          window.location.href = data.resetUrl;
+        }
       } else {
         alert(data.error || 'Failed to send reset link');
       }
