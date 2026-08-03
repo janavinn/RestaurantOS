@@ -2,9 +2,11 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { 
   LayoutDashboard, Wallet, Plus, Search, Filter, MoreVertical, 
   Eye, TrendingDown, ArrowUpRight, ArrowDownRight, IndianRupee,
-  Calendar, CheckCircle2, AlertCircle, Clock, X
+  Calendar, CheckCircle2, AlertCircle, Clock, X, FileText
 } from 'lucide-react';
 import { PieChart, Pie, Cell, ResponsiveContainer, LineChart, Line } from 'recharts';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 export default function ExpenseManagement() {
   const [expenses, setExpenses] = useState<any[]>([]);
@@ -33,6 +35,24 @@ export default function ExpenseManagement() {
   useEffect(() => {
     fetchExpenses();
   }, []);
+
+  const handleExportPDF = () => {
+    const doc = new jsPDF();
+    doc.text("Expense Ledger", 14, 15);
+    autoTable(doc, {
+      startY: 20,
+      head: [['Date', 'Category', 'Description', 'Amount']],
+      body: expenses.map(e => [
+        new Date(e.date).toLocaleDateString('en-GB'),
+        e.category,
+        e.description,
+        `Rs. ${e.amount}`
+      ]),
+      theme: 'grid',
+      headStyles: { fillColor: [180, 134, 0] }
+    });
+    doc.save("Expense_Ledger.pdf");
+  };
 
   const handleAddExpense = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -130,8 +150,8 @@ export default function ExpenseManagement() {
           </div>
         </div>
         <div style={{ display: 'flex', gap: '12px' }}>
-          <button style={{ display: 'flex', gap: '8px', alignItems: 'center', background: '#131313', border: '1px solid #1f2330', padding: '10px 20px', borderRadius: '8px', color: '#b48600', fontWeight: 600, cursor: 'pointer' }}>
-            <TrendingDown size={16} /> Export Ledger
+          <button onClick={handleExportPDF} style={{ display: 'flex', gap: '8px', alignItems: 'center', background: '#131313', border: '1px solid #1f2330', padding: '10px 20px', borderRadius: '8px', color: '#b48600', fontWeight: 600, cursor: 'pointer' }}>
+            <FileText size={16} /> Download PDF Report
           </button>
           <button onClick={() => setIsAddModalOpen(true)} style={{ display: 'flex', gap: '8px', alignItems: 'center', background: '#b48600', border: 'none', padding: '10px 20px', borderRadius: '8px', color: 'white', fontWeight: 600, cursor: 'pointer' }}>
             <Plus size={16} /> Log Expense

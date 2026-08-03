@@ -133,7 +133,8 @@ router.get('/', authenticate, async (req: Request, res: Response): Promise<any> 
       const name = d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
       salesData.push({
         name,
-        value: sparklineSales[6 - i].v
+        revenue: sparklineSales[6 - i].v,
+        expenses: sparklineExpenses[6 - i].v
       });
     }
 

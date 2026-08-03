@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { ChevronDown, Users, Package, Receipt, LineChart, ShoppingCart, Wallet, Loader2 } from 'lucide-react';
-import { LineChart as RechartsLineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { ChevronDown, Users, Package, Receipt, LineChart, ShoppingCart, Wallet, Loader2, ArrowRight } from 'lucide-react';
+import { LineChart as RechartsLineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area, Legend } from 'recharts';
 
 export default function Dashboard() {
   const [userName, setUserName] = useState('Owner');
@@ -258,18 +258,21 @@ export default function Dashboard() {
         {isManagement && (
         <div className="dashboard-card activities-card">
           <div className="card-header">
-            <h3>Recent Activities</h3>
-            <button className="btn-outline">View All</button>
+            <h3>Live Activity Feed</h3>
+            <button className="btn-outline" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>View All <ArrowRight size={14} /></button>
           </div>
-          <div className="activity-list">
+          <div className="activity-list" style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '16px', position: 'relative' }}>
+            <div style={{ position: 'absolute', left: '15px', top: '20px', bottom: '20px', width: '2px', background: '#1f2330', zIndex: 0 }}></div>
             {recentActivities.map((act: any) => (
-              <div className="activity-item" key={act.id}>
-                <div className={`activity-icon ${act.type === 'purchase' ? 'blue' : act.type === 'expense' ? 'red' : act.type === 'stock' ? 'green' : 'indigo'}`}>
-                  {act.type === 'purchase' ? <ShoppingCart size={14}/> : act.type === 'expense' ? <Receipt size={14}/> : act.type === 'stock' ? <Package size={14}/> : <Users size={14}/>}
+              <div className="activity-item" key={act.id} style={{ display: 'flex', gap: '16px', zIndex: 1, position: 'relative' }}>
+                <div style={{ width: '32px', height: '32px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#0a0a0a', border: `2px solid ${act.type === 'purchase' ? '#3b82f6' : act.type === 'expense' ? '#ef4444' : act.type === 'stock' ? '#22c55e' : '#8b5cf6'}` }}>
+                  <div style={{ color: act.type === 'purchase' ? '#3b82f6' : act.type === 'expense' ? '#ef4444' : act.type === 'stock' ? '#22c55e' : '#8b5cf6' }}>
+                    {act.type === 'purchase' ? <ShoppingCart size={14}/> : act.type === 'expense' ? <Receipt size={14}/> : act.type === 'stock' ? <Package size={14}/> : <Users size={14}/>}
+                  </div>
                 </div>
-                <div className="activity-info">
-                  <span className="act-title">{act.title}</span>
-                  <span className="act-time">{new Date(act.time).toLocaleString('en-GB', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
+                <div className="activity-info" style={{ flex: 1, display: 'flex', flexDirection: 'column', paddingBottom: '16px' }}>
+                  <span className="act-title" style={{ fontSize: '0.875rem', fontWeight: 600, color: '#f8fafc' }}>{act.title}</span>
+                  <span className="act-time" style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '2px' }}>{new Date(act.time).toLocaleString('en-GB', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
                 </div>
               </div>
             ))}
@@ -283,7 +286,7 @@ export default function Dashboard() {
       <div className="bottom-row">
         <div className="dashboard-card chart-card">
           <div className="card-header">
-            <h3>Sales Trend (Last 7 Days)</h3>
+            <h3>Financial Overview (Revenue vs Expenses)</h3>
             <select className="date-select" defaultValue="this_week">
               <option value="today">Today</option>
               <option value="this_week">This Week</option>
@@ -293,15 +296,27 @@ export default function Dashboard() {
               <option value="all_time">All Time</option>
             </select>
           </div>
-          <div className="chart-container" style={{ height: '300px', marginTop: '20px' }}>
+          <div className="chart-container" style={{ height: '350px', marginTop: '20px' }}>
             <ResponsiveContainer width="100%" height="100%">
-              <RechartsLineChart data={salesData} margin={{ top: 10, right: 20, bottom: 5, left: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+              <AreaChart data={salesData} margin={{ top: 10, right: 20, bottom: 5, left: 0 }}>
+                <defs>
+                  <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0}/>
+                  </linearGradient>
+                  <linearGradient id="colorExpense" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#ef4444" stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor="#ef4444" stopOpacity={0}/>
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#1f2330" />
                 <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 12}} dy={10} />
-                <YAxis axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 12}} tickFormatter={(value) => `${value/1000}K`} />
-                <Tooltip cursor={{stroke: '#e2e8f0', strokeWidth: 1}} contentStyle={{borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)'}} />
-                <Line type="monotone" dataKey="value" stroke="#8b5cf6" strokeWidth={3} dot={{r: 4, strokeWidth: 2, fill: 'white', stroke: '#8b5cf6'}} activeDot={{r: 6}} isAnimationActive={false} />
-              </RechartsLineChart>
+                <YAxis axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 12}} tickFormatter={(value) => `₹${value >= 1000 ? value/1000 + 'k' : value}`} />
+                <Tooltip cursor={{stroke: '#1f2330', strokeWidth: 1}} contentStyle={{background: '#0a0a0a', borderRadius: '8px', border: '1px solid #1f2330', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.5)', color: '#f8fafc'}} />
+                <Legend verticalAlign="top" height={36} iconType="circle" />
+                <Area type="monotone" dataKey="revenue" name="Revenue" stroke="#8b5cf6" strokeWidth={3} fillOpacity={1} fill="url(#colorRevenue)" activeDot={{r: 6, stroke: '#0a0a0a', strokeWidth: 2}} isAnimationActive={true} />
+                <Area type="monotone" dataKey="expenses" name="Expenses" stroke="#ef4444" strokeWidth={3} fillOpacity={1} fill="url(#colorExpense)" activeDot={{r: 6, stroke: '#0a0a0a', strokeWidth: 2}} isAnimationActive={true} />
+              </AreaChart>
             </ResponsiveContainer>
           </div>
         </div>

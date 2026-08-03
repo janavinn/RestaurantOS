@@ -40,6 +40,20 @@ export default function DashboardLayout() {
     fetchNotifications();
   }, [navigate, urlRole]);
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        setShowSearch(true);
+        setTimeout(() => {
+          document.getElementById('global-search-input')?.focus();
+        }, 50);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   const fetchNotifications = async () => {
     try {
       const token = localStorage.getItem('token');
@@ -360,8 +374,9 @@ export default function DashboardLayout() {
             <div className="header-left" style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
               <div className="search-bar" style={{ width: '400px', position: 'relative' }}>
                 <input 
+                  id="global-search-input"
                   type="text" 
-                  placeholder="Search anything..." 
+                  placeholder="Search anything... (Ctrl+K)" 
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onFocus={() => searchQuery && setShowSearch(true)}
