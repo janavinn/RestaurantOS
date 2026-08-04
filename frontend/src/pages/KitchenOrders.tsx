@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { Search, Bell, Clock, Utensils, ClipboardList, CheckCircle, Flame, AlertCircle, AlertTriangle, ArrowRight, BookOpen, PenTool, Calendar, BarChart2, Users, X } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { Search, Bell, Clock, Utensils, ClipboardList, CheckCircle, Flame, AlertCircle, AlertTriangle, ArrowRight, BookOpen, PenTool, Calendar, BarChart2, Users, X, Volume2, VolumeX } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 export default function ChefDashboard() {
@@ -10,6 +10,8 @@ export default function ChefDashboard() {
   const [orders, setOrders] = useState<any[]>([]);
   const [completedCount, setCompletedCount] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [voiceEnabled, setVoiceEnabled] = useState(false);
+  const previousOrdersCount = useRef(0);
 
   const fetchOrders = async () => {
     try {
@@ -34,6 +36,23 @@ export default function ChefDashboard() {
       setLoading(false);
     }
   };
+
+  // Voice Announcement Effect
+  useEffect(() => {
+    if (orders.length > 0 && orders.length > previousOrdersCount.current) {
+      // New orders arrived
+      const newOrders = orders.filter(o => o.status === 'NEW');
+      if (newOrders.length > 0 && voiceEnabled && 'speechSynthesis' in window) {
+        const latestOrder = newOrders[newOrders.length - 1];
+        const text = `New order received for Table ${latestOrder.table?.tableNumber || 'Takeaway'}. Please check the dashboard.`;
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.rate = 1.0;
+        utterance.pitch = 1.1;
+        window.speechSynthesis.speak(utterance);
+      }
+    }
+    previousOrdersCount.current = orders.length;
+  }, [orders, voiceEnabled]);
 
   useEffect(() => {
     fetchOrders();
@@ -98,6 +117,22 @@ export default function ChefDashboard() {
             <Calendar size={16} />
             <span>{formatDate(currentTime)}, {formatTime(currentTime)}</span>
           </div>
+          
+          <button 
+            onClick={() => setVoiceEnabled(!voiceEnabled)}
+            style={{ 
+              display: 'flex', alignItems: 'center', gap: '8px', 
+              background: voiceEnabled ? '#22c55e20' : '#1f2330', 
+              color: voiceEnabled ? '#22c55e' : '#9ca3af', 
+              border: `1px solid ${voiceEnabled ? '#22c55e40' : '#1f2330'}`, 
+              padding: '8px 16px', borderRadius: '8px', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 600,
+              transition: 'all 0.2s'
+            }}
+          >
+            {voiceEnabled ? <Volume2 size={16} /> : <VolumeX size={16} />}
+            {voiceEnabled ? 'Voice Alerts On' : 'Voice Alerts Off'}
+          </button>
+
           <div style={{ position: 'relative', cursor: 'pointer' }}>
             <Bell size={20} color="#9ca3af" />
             <div style={{ position: 'absolute', top: '-4px', right: '-4px', background: '#f97316', color: 'white', fontSize: '0.6rem', fontWeight: 'bold', width: '14px', height: '14px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>3</div>
@@ -243,22 +278,69 @@ export default function ChefDashboard() {
         {/* RIGHT COLUMN */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
           
-          {/* Kitchen Overview */}
+          {/* Kitchen Heatmap */}
           <div style={{ background: '#161922', borderRadius: '12px', border: '1px solid #1f2330', padding: '24px' }}>
-            <h2 style={{ margin: '0 0 24px 0', fontSize: '1.1rem', fontWeight: 600 }}>Kitchen Overview</h2>
+            <h2 style={{ margin: '0 0 24px 0', fontSize: '1.1rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <Flame size={18} color="#ef4444" /> Station Heatmap
+            </h2>
+            
+            {(() => {
+              // Calculate rough station load based on active order items
+              let grillLoad = 0, saladLoad = 0, fryerLoad = 0;
+              const activeOrders = orders.filter(o => o.status === 'NEW' || o.status === 'PREPARING');
+              
+              activeOrders.forEach(o => {
+                o.items.forEach((it: any) => {
+                  const name = (it.menuItem?.name || '').toLowerCase();
+                  if (name.includes('burger') || name.includes('steak') || name.includes('chicken')) grillLoad += it.quantity;
+                  else if (name.includes('salad') || name.includes('wrap') || name.includes('cold')) saladLoad += it.quantity;
+                  else fryerLoad += it.quantity; // Default to fryer/other
+                });
+              });
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#9ca3af', fontSize: '0.9rem' }}>
-                  <Users size={16} color="#f97316" /> Active Cooks
+              const maxLoad = Math.max(grillLoad, saladLoad, fryerLoad, 1);
+              const getLoadColor = (val: number) => val > 10 ? '#ef4444' : val > 5 ? '#f59e0b' : '#22c55e';
+              const getPercent = (val: number) => Math.min(100, Math.round((val / (maxLoad * 1.5)) * 100)) + '%';
+
+              return (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  
+                  {/* Grill Station */}
+                  <div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontSize: '0.85rem', fontWeight: 500 }}>
+                      <span style={{ color: '#d1d5db' }}>Grill & Oven</span>
+                      <span style={{ color: getLoadColor(grillLoad) }}>{grillLoad} items</span>
+                    </div>
+                    <div style={{ width: '100%', height: '8px', background: '#0f1219', borderRadius: '4px', overflow: 'hidden' }}>
+                      <div style={{ width: getPercent(grillLoad), height: '100%', background: getLoadColor(grillLoad), transition: 'all 0.5s' }} />
+                    </div>
+                  </div>
+
+                  {/* Fryer Station */}
+                  <div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontSize: '0.85rem', fontWeight: 500 }}>
+                      <span style={{ color: '#d1d5db' }}>Fryer & Wok</span>
+                      <span style={{ color: getLoadColor(fryerLoad) }}>{fryerLoad} items</span>
+                    </div>
+                    <div style={{ width: '100%', height: '8px', background: '#0f1219', borderRadius: '4px', overflow: 'hidden' }}>
+                      <div style={{ width: getPercent(fryerLoad), height: '100%', background: getLoadColor(fryerLoad), transition: 'all 0.5s' }} />
+                    </div>
+                  </div>
+
+                  {/* Salad Station */}
+                  <div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontSize: '0.85rem', fontWeight: 500 }}>
+                      <span style={{ color: '#d1d5db' }}>Cold Station & Salad</span>
+                      <span style={{ color: getLoadColor(saladLoad) }}>{saladLoad} items</span>
+                    </div>
+                    <div style={{ width: '100%', height: '8px', background: '#0f1219', borderRadius: '4px', overflow: 'hidden' }}>
+                      <div style={{ width: getPercent(saladLoad), height: '100%', background: getLoadColor(saladLoad), transition: 'all 0.5s' }} />
+                    </div>
+                  </div>
+
                 </div>
-              </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#9ca3af', fontSize: '0.9rem' }}>
-                  <Users size={16} color="#22c55e" /> Available Cooks
-                </div>
-              </div>
-            </div>
+              );
+            })()}
           </div>
 
           {/* Today's Summary */}

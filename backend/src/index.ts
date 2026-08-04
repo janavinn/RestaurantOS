@@ -1,4 +1,5 @@
 import express, { Request, Response } from 'express';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 import cors from 'cors';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
@@ -298,6 +299,57 @@ app.use('/api/invoices', invoicesRouter);
 app.use('/api/chat', chatRouter);
 app.use('/api/notifications', notificationsRouter);
 app.use('/api/search', searchRouter);
+
+// --- AI Recipe Generator ---
+app.post('/api/recipes/generate', async (req: Request, res: Response): Promise<any> => {
+  try {
+    const { ingredients } = req.body;
+    if (!ingredients || !ingredients.length) return res.status(400).json({ error: 'Ingredients required' });
+    
+    if (!process.env.GEMINI_API_KEY) {
+      // Mock response if no API key is provided
+      return res.json({
+        name: "Chef's Special Mix",
+        category: "Special",
+        prepTime: "15 mins",
+        cookTime: "25 mins",
+        servings: 2,
+        difficulty: "Medium",
+        image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500&q=80",
+        ingredients: ingredients.map((i: string) => ({ name: i, quantity: "To taste" })),
+        instructions: ["Prepare the ingredients.", "Cook them perfectly.", "Serve hot!"]
+      });
+    }
+
+    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    
+    const prompt = `You are an expert chef. The user has the following ingredients available: ${ingredients.join(', ')}.
+Generate a highly creative, delicious recipe using these ingredients. You can assume basic pantry staples (salt, pepper, oil, water, garlic, onions) are available.
+Return the result strictly as a raw JSON object (without any markdown blocks like \`\`\`json) with the following structure:
+{
+  "name": "Recipe Name",
+  "category": "Category (e.g. Mains, Appetizer)",
+  "prepTime": "XX mins",
+  "cookTime": "XX mins",
+  "servings": 2,
+  "difficulty": "Easy/Medium/Hard",
+  "image": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500&q=80",
+  "ingredients": [ { "name": "Ingredient Name", "quantity": "Amount" } ],
+  "instructions": [ "Step 1", "Step 2" ]
+}`;
+
+    const result = await model.generateContent(prompt);
+    const responseText = result.response.text().trim();
+    const jsonStr = responseText.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+    const recipe = JSON.parse(jsonStr);
+    
+    res.json(recipe);
+  } catch (error) {
+    console.error('Error generating recipe:', error);
+    res.status(500).json({ error: 'Failed to generate recipe' });
+  }
+});
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

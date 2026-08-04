@@ -120,18 +120,40 @@ export default function RecipeManagement() {
 
   const searchRecipeAPI = async (query: string) => {
     try {
+      const cleanQuery = query.toLowerCase().trim();
+      
+      // 0. Check if user is asking to generate a recipe from ingredients
+      const useUpMatch = cleanQuery.match(/use\s*up\s+(.*)|with\s+(.*)/i);
+      if (useUpMatch || cleanQuery.includes('ingredients:')) {
+        const ingredientsText = (useUpMatch ? (useUpMatch[1] || useUpMatch[2]) : cleanQuery.replace('ingredients:', '')).trim();
+        const ingredients = ingredientsText.split(/,|\s+and\s+/).map(i => i.trim()).filter(i => i);
+        
+        if (ingredients.length > 0) {
+          const res = await fetch((import.meta.env.VITE_API_URL || '') + '/api/recipes/generate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ ingredients })
+          });
+          if (res.ok) {
+            const recipe = await res.json();
+            setActiveRecipe(recipe);
+            return `I have generated a brand new recipe for **${recipe.name}** based on your ingredients! Enjoy!`;
+          }
+        }
+      }
+
       // Clean up the query a bit to help the API
-      const cleanQuery = query.replace(/how to make/i, '').replace(/recipe for/i, '').replace(/give me/i, '').trim().toLowerCase();
+      const searchTerms = cleanQuery.replace(/how to make/i, '').replace(/recipe for/i, '').replace(/give me/i, '').trim();
       
       // 1. Check local fallback first (for custom/Indian dishes like Veg Biryani)
-      const localMatch = FALLBACK_RECIPES.find(r => r.name.toLowerCase().includes(cleanQuery) || cleanQuery.includes(r.name.toLowerCase()));
+      const localMatch = FALLBACK_RECIPES.find(r => r.name.toLowerCase().includes(searchTerms) || searchTerms.includes(r.name.toLowerCase()));
       if (localMatch) {
         setActiveRecipe(localMatch);
         return `I found a great recipe for **${localMatch.name}**! I have loaded the exact ingredients and step-by-step instructions for you on the right. Happy cooking!`;
       }
 
       // 2. Try the public API
-      const res = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${encodeURIComponent(cleanQuery)}`);
+      const res = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${encodeURIComponent(searchTerms)}`);
       const data = await res.json();
       
       if (data.meals && data.meals.length > 0) {
@@ -167,7 +189,7 @@ export default function RecipeManagement() {
         setActiveRecipe(recipe);
         return `I found a great recipe for **${meal.strMeal}**! I have loaded the exact ingredients and step-by-step instructions for you on the right. Happy cooking!`;
       } else {
-        return `I'm sorry Chef, I couldn't find a recipe for "${cleanQuery}". Could you try asking for something else? (e.g., "Chicken", "Beef", "Pasta", "Curry")`;
+        return `I'm sorry Chef, I couldn't find a recipe for "${searchTerms}". Could you try asking for something else? (e.g., "Chicken", "Beef", "Pasta", "Curry")`;
       }
     } catch (error) {
       return "Oops, my recipe database connection is down right now. Please try again in a moment!";
