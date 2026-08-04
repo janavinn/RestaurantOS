@@ -72,7 +72,7 @@ export default function WaiterOrders() {
   const activeOrders = orders.filter(o => ['NEW', 'PREPARING', 'READY', 'SERVED'].includes(o.status));
 
   return (
-    <div style={{ padding: '40px', background: '#f8fafc', minHeight: '100vh', fontFamily: 'Inter, sans-serif' }}>
+    <div style={{ padding: '40px', background: '#ffffff', minHeight: '100vh', fontFamily: 'Inter, sans-serif' }}>
       <div style={{ marginBottom: '32px' }}>
         <h1 style={{ margin: '0 0 8px 0', fontSize: '2rem', fontWeight: 700, color: '#0f172a' }}>My Orders</h1>
         <p style={{ margin: 0, color: '#64748b', fontSize: '1.1rem' }}>Track orders in the kitchen and serve when ready.</p>
