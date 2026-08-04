@@ -128,26 +128,8 @@ app.post('/api/auth/forgot-password', async (req: Request, res: Response): Promi
 
     const resetUrl = `https://restaurant-os-fjqs.vercel.app/reset-password/${resetToken}`;
 
-    let transporter = nodemailer.createTransport({
-      host: 'smtp.ethereal.email',
-      port: 587,
-      auth: {
-        user: 'mylene.stehr53@ethereal.email',
-        pass: '6Q9Z5bS3Y3eT2B2mD9'
-      }
-    });
-
-    const info = await transporter.sendMail({
-      from: '"Aarunya Admin" <admin@aarunya.com>',
-      to: email,
-      subject: 'Password Reset Request',
-      text: `You requested a password reset. Click this link to reset your password: ${resetUrl}`,
-      html: `<p>You requested a password reset.</p><p><a href="${resetUrl}">Click here to reset your password</a></p>`
-    });
-
-    console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-
-    res.json({ message: 'If an account with that email exists, we sent a password reset link.' });
+    // DEMO MODE: Skip nodemailer on Vercel
+    res.json({ message: 'A password reset link has been generated.', resetUrl });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Failed to process request' });

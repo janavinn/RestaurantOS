@@ -24,6 +24,11 @@ export default function ForgotPassword() {
       if (!response.ok) {
         throw new Error(data.error || 'Failed to request reset link');
       }
+      
+      if (data.resetUrl) {
+        window.location.href = data.resetUrl;
+        return;
+      }
 
       setSuccess(true);
     } catch (err: any) {
