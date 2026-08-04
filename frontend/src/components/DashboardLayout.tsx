@@ -264,9 +264,8 @@ export default function DashboardLayout() {
             <div style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: '0 16px' }}>
               
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '16px 8px', borderBottom: '1px solid #1f2330', marginBottom: '24px' }}>
-                <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  <img src="/logo.png" alt="Logo" style={{ width: '100%', objectFit: 'contain' }} onError={(e) => (e.currentTarget.style.display = 'none')} />
-                  <ChefHat size={32} color="#f97316" style={{ position: 'absolute' }} />
+                <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, padding: '4px' }}>
+                  <img src="/logo.png" alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} onError={(e) => (e.currentTarget.style.display = 'none')} />
                 </div>
                 {isSidebarOpen && (
                   <div>

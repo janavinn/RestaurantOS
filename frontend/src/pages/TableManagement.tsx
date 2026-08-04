@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Users, ClipboardList, ChefHat, LayoutDashboard, ChevronDown, Trash2, X, Plus, Bell } from 'lucide-react';
-import { useParams } from 'react-router-dom';
+import { Users, ClipboardList, ChefHat, LayoutDashboard, ChevronDown, Trash2, X, Plus, Bell, LogOut } from 'lucide-react';
+import { useParams, useNavigate } from 'react-router-dom';
 
 export default function TableManagement() {
   const [tables, setTables] = useState<any[]>([]);
@@ -13,6 +13,10 @@ export default function TableManagement() {
   const [orderNotes, setOrderNotes] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
+  
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [isTakingOrder, setIsTakingOrder] = useState(false);
+  const navigate = useNavigate();
 
   const [notifications, setNotifications] = useState<{id: number, message: string}[]>([]);
   const notifiedOrderIds = React.useRef<Set<string>>(new Set());
@@ -105,6 +109,7 @@ export default function TableManagement() {
       setOrderItems([]);
       setOrderNotes('');
       setSelectedTableId('');
+      setIsTakingOrder(false);
       fetchData();
     } catch (err) {
       console.error(err);
@@ -206,17 +211,44 @@ export default function TableManagement() {
             <div style={{ fontSize: '1rem', fontWeight: 600, color: '#f8fafc' }}>{time}</div>
             <div style={{ fontSize: '0.8rem', color: '#9ca3af' }}>{date}</div>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: '#1f2330', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <span style={{ color: '#f8fafc', fontWeight: 600 }}>{userName.substring(0, 2).toUpperCase()}</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', position: 'relative' }}>
+            <div 
+              style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }}
+              onClick={() => setShowProfileMenu(!showProfileMenu)}
+            >
+              <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: '#1f2330', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <span style={{ color: '#f8fafc', fontWeight: 600 }}>{userName.substring(0, 2).toUpperCase()}</span>
+              </div>
+              <div>
+                <div style={{ fontSize: '0.9rem', fontWeight: 600, color: '#f8fafc' }}>{userName}</div>
+                <div style={{ fontSize: '0.75rem', color: '#9ca3af', display: 'flex', alignItems: 'center', gap: '4px' }}>Waiter <ChevronDown size={12}/></div>
+              </div>
             </div>
-            <div>
-              <div style={{ fontSize: '0.9rem', fontWeight: 600, color: '#f8fafc' }}>{userName}</div>
-              <div style={{ fontSize: '0.75rem', color: '#9ca3af', display: 'flex', alignItems: 'center', gap: '4px' }}>Waiter <ChevronDown size={12}/></div>
-            </div>
+
+            {showProfileMenu && (
+              <div style={{ position: 'absolute', top: '50px', right: '0', background: '#1e1e2d', border: '1px solid #1f2330', borderRadius: '12px', width: '200px', zIndex: 100, boxShadow: '0 10px 25px rgba(0,0,0,0.5)', overflow: 'hidden', textAlign: 'left' }}>
+                <div style={{ padding: '8px' }}>
+                  <div 
+                    onClick={() => { localStorage.removeItem('token'); localStorage.removeItem('user'); navigate('/aarunya/staff/login'); }} 
+                    style={{ background: 'transparent', border: 'none', width: '100%', padding: '10px 12px', borderRadius: '6px', fontSize: '0.85rem', color: '#ef4444', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', transition: 'all 0.2s' }} 
+                    onMouseOver={(e) => e.currentTarget.style.background = 'rgba(239, 68, 68, 0.1)'} 
+                    onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
+                  >
+                    <LogOut size={16} /> Log out
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
+
+      <style>{`
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(-10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
 
       {/* Stats Row */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '24px', marginBottom: '32px' }}>
@@ -372,7 +404,7 @@ export default function TableManagement() {
               <label style={{ display: 'block', fontSize: '0.85rem', color: '#9ca3af', marginBottom: '8px' }}>Select Table</label>
               <select 
                 value={selectedTableId}
-                onChange={(e) => setSelectedTableId(e.target.value)}
+                onChange={(e) => { setSelectedTableId(e.target.value); setIsTakingOrder(false); setOrderItems([]); }}
                 style={{ width: '100%', background: '#0f1219', border: '1px solid #1f2330', color: '#f8fafc', padding: '12px', borderRadius: '8px', outline: 'none' }}
               >
                 <option value="">Choose an available table</option>
@@ -383,27 +415,27 @@ export default function TableManagement() {
             </div>
             
             <button 
-              onClick={() => document.getElementById('menu-select')?.focus()}
-              disabled={!selectedTableId}
-              style={{ width: '100%', padding: '12px', background: selectedTableId ? '#f97316' : '#f9731650', color: 'white', border: 'none', borderRadius: '8px', fontWeight: 600, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px', cursor: selectedTableId ? 'pointer' : 'not-allowed' }}
+              onClick={() => { if (selectedTableId) setIsTakingOrder(true); }}
+              disabled={!selectedTableId || isTakingOrder}
+              style={{ width: '100%', padding: '12px', background: selectedTableId && !isTakingOrder ? '#f97316' : '#f9731650', color: 'white', border: 'none', borderRadius: '8px', fontWeight: 600, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px', cursor: selectedTableId && !isTakingOrder ? 'pointer' : 'not-allowed' }}
             >
               <ClipboardList size={18} /> Start Taking Order
             </button>
           </div>
 
-          <div style={{ background: '#161922', borderRadius: '16px', border: '1px solid #1f2330', padding: '24px', flex: 1, display: 'flex', flexDirection: 'column' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-              <h2 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 600 }}>My Active Order</h2>
-              {selectedTableId && <div style={{ color: '#f97316', fontSize: '0.9rem' }}>Table {tables.find(t=>t.id===selectedTableId)?.tableNumber}</div>}
-            </div>
+          {isTakingOrder && (
+            <div style={{ background: '#161922', borderRadius: '16px', border: '1px solid #1f2330', padding: '24px', flex: 1, display: 'flex', flexDirection: 'column', animation: 'fadeIn 0.3s ease-out' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+                <h2 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 600 }}>My Active Order</h2>
+                {selectedTableId && <div style={{ color: '#f97316', fontSize: '0.9rem' }}>Table {tables.find(t=>t.id===selectedTableId)?.tableNumber}</div>}
+              </div>
 
-            {/* Menu Item Adder (Only visible if table selected) */}
-            {selectedTableId && (
+              {/* Menu Item Adder */}
               <div style={{ marginBottom: '20px' }}>
                 <select 
                   id="menu-select"
                   onChange={handleAddItem}
-                  defaultValue=""
+                  value=""
                   style={{ width: '100%', background: '#0f1219', border: '1px dashed #3b82f6', color: '#3b82f6', padding: '12px', borderRadius: '8px', outline: 'none', cursor: 'pointer' }}
                 >
                   <option value="" disabled>+ Add Menu Item</option>
@@ -412,7 +444,6 @@ export default function TableManagement() {
                   ))}
                 </select>
               </div>
-            )}
 
             <div style={{ flex: 1, overflowY: 'auto' }}>
               {orderItems.length === 0 ? (
@@ -477,11 +508,12 @@ export default function TableManagement() {
                 <ChefHat size={12} /> Order will be sent to chef
               </div>
             </div>
-
           </div>
+          )}
+
+        </div>
         </div>
 
       </div>
-    </div>
   );
 }
