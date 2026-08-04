@@ -244,7 +244,7 @@ export default function DashboardLayout() {
               {/* Chef Mascot */}
               {isSidebarOpen && (
                 <div style={{ marginTop: 'auto', marginBottom: '16px', display: 'flex', justifyContent: 'center' }}>
-                  <img src="/chef.png" alt="Chef Mascot" className="animate-bounce-slow" style={{ width: '140px', height: 'auto', filter: 'drop-shadow(0 10px 15px rgba(0,0,0,0.5))' }} />
+                  <img src="/chef.png" alt="Chef Mascot" className="animate-bounce-slow" style={{ width: '180px', height: 'auto', filter: 'drop-shadow(0 10px 15px rgba(0,0,0,0.5))' }} />
                 </div>
               )}
 

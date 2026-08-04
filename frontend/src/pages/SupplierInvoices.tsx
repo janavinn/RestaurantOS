@@ -193,7 +193,7 @@ export default function SupplierInvoices() {
               <h1 style={{ fontSize: '1.875rem', color: '#f8fafc', margin: '0 0 4px 0', fontWeight: 'bold' }}>AI Invoice Processing</h1>
               <p style={{ margin: 0, color: '#9ca3af' }}>Upload supplier bills to automatically extract details and log expenses.</p>
             </div>
-            <img src="/robot.png" alt="AI Robot" className="animate-float" style={{ width: '100px', height: 'auto', filter: 'drop-shadow(0 8px 12px rgba(0,0,0,0.5))' }} />
+            <img src="/robot.png" alt="AI Robot" className="animate-float" style={{ width: '140px', height: 'auto', filter: 'drop-shadow(0 8px 12px rgba(0,0,0,0.5))' }} />
           </div>
         </div>
         <div style={{ display: 'flex', gap: '12px' }}>
