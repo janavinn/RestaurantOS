@@ -246,19 +246,6 @@ export default function ChefDashboard() {
           {/* Kitchen Overview */}
           <div style={{ background: '#161922', borderRadius: '12px', border: '1px solid #1f2330', padding: '24px' }}>
             <h2 style={{ margin: '0 0 24px 0', fontSize: '1.1rem', fontWeight: 600 }}>Kitchen Overview</h2>
-            
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '32px' }}>
-              <div style={{ position: 'relative', width: '160px', height: '80px', overflow: 'hidden', marginBottom: '16px' }}>
-                <div style={{ width: '160px', height: '160px', borderRadius: '50%', border: '12px solid #1f2330', borderTopColor: '#f97316', borderRightColor: '#f97316', transform: 'rotate(-45deg)', position: 'absolute', top: 0, left: 0 }} />
-                <div style={{ position: 'absolute', bottom: '0', left: '0', width: '100%', textAlign: 'center' }}>
-                  <div style={{ fontSize: '2rem', fontWeight: 700, color: '#f8fafc', lineHeight: 1 }}>70%</div>
-                </div>
-              </div>
-              <div style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: '0.9rem', color: '#f8fafc', marginBottom: '4px' }}>Kitchen Capacity</div>
-                <div style={{ fontSize: '0.75rem', color: '#a3e635' }}>Normal Load</div>
-              </div>
-            </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
