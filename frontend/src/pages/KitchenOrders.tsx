@@ -265,13 +265,11 @@ export default function ChefDashboard() {
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#9ca3af', fontSize: '0.9rem' }}>
                   <Users size={16} color="#f97316" /> Active Cooks
                 </div>
-                <div style={{ fontWeight: 600, color: '#f8fafc' }}>4</div>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#9ca3af', fontSize: '0.9rem' }}>
                   <Users size={16} color="#22c55e" /> Available Cooks
                 </div>
-                <div style={{ fontWeight: 600, color: '#f8fafc' }}>2</div>
               </div>
             </div>
           </div>
@@ -282,11 +280,9 @@ export default function ChefDashboard() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '24px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div style={{ color: '#9ca3af', fontSize: '0.9rem' }}>Total Active</div>
-                <div style={{ fontWeight: 600, color: '#f8fafc' }}>{orders.length}</div>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div style={{ color: '#9ca3af', fontSize: '0.9rem' }}>Completed Orders</div>
-                <div style={{ fontWeight: 600, color: '#22c55e' }}>{completedCount}</div>
               </div>
             </div>
           </div>

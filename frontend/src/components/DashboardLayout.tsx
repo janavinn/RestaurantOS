@@ -241,8 +241,15 @@ export default function DashboardLayout() {
                 })}
               </nav>
 
+              {/* Chef Mascot */}
+              {isSidebarOpen && (
+                <div style={{ marginTop: 'auto', marginBottom: '16px', display: 'flex', justifyContent: 'center' }}>
+                  <img src="/chef.png" alt="Chef Mascot" className="animate-bounce-slow" style={{ width: '140px', height: 'auto', filter: 'drop-shadow(0 10px 15px rgba(0,0,0,0.5))' }} />
+                </div>
+              )}
+
               {/* Log Out */}
-              <div style={{ padding: '24px 8px', marginTop: 'auto' }}>
+              <div style={{ padding: '24px 8px', marginTop: !isSidebarOpen ? 'auto' : '0' }}>
                 <div 
                   onClick={() => { localStorage.removeItem('token'); localStorage.removeItem('user'); navigate('/aarunya/staff/login'); }}
                   style={{ display: 'flex', alignItems: 'center', gap: '16px', color: '#d1d5db', cursor: 'pointer', fontSize: '0.9rem', fontWeight: 500, padding: '8px' }}
