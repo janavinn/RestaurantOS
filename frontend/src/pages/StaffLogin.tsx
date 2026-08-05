@@ -13,8 +13,7 @@ const roleConfig: any = {
   'WAITER': { icon: <Utensils size={32} />, color: '#22c55e', desc: 'Take orders and serve customers.' },
   'MANAGER': { icon: <ClipboardList size={32} />, color: '#3b82f6', desc: 'Oversee operations, staff, inventory and reports.' },
   'STORE_KEEPER': { icon: <Store size={32} />, color: '#a855f7', desc: 'Handle inventory, stock in/out and supplies.' },
-  'CASHIER': { icon: <Wallet size={32} />, color: '#ec4899', desc: 'Generate bills and manage payments.' },
-  'OWNER': { icon: <Shield size={32} />, color: '#eab308', desc: 'Access business insights, finance and settings.' },
+  'CASHIER': { icon: <Wallet size={32} />, color: '#ec4899', desc: 'Generate bills and manage payments.' }
 };
 
 // Reusable Custom Logo Component to replace the ugly white background logo.png
