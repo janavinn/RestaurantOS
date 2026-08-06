@@ -344,7 +344,10 @@ export default function Dashboard() {
             <tbody>
               {topMenuItems.map((item: any, i: number) => (
                 <tr key={i}>
-                  <td className="menu-name"><span className="menu-img">{item.img}</span> {item.name}</td>
+                  <td className="menu-name" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    {item.img ? <img src={item.img} alt={item.name} style={{ width: '32px', height: '32px', borderRadius: '6px', objectFit: 'cover' }} /> : <div style={{ width: '32px', height: '32px', borderRadius: '6px', background: '#1f2330' }} />}
+                    {item.name}
+                  </td>
                   <td>{item.sold}</td>
                   <td className="menu-revenue">{item.revenue}</td>
                 </tr>
