@@ -51,7 +51,7 @@ router.post('/process', upload.single('invoice'), async (req: Request, res: Resp
       });
     }
 
-    const model = genAI.getGenerativeModel({ model: 'gemini-pro-vision' });
+    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
     
     // Prepare image part
     const imagePart = {
