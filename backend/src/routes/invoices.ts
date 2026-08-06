@@ -51,7 +51,7 @@ router.post('/process', upload.single('invoice'), async (req: Request, res: Resp
       });
     }
 
-    const model = genAI.getGenerativeModel({ model: 'gemini-3.6-flash' });
+    const model = genAI.getGenerativeModel({ model: 'gemini-pro-vision' });
     
     // Prepare image part
     const imagePart = {
@@ -92,10 +92,10 @@ router.post('/process', upload.single('invoice'), async (req: Request, res: Resp
     let text = response.text().trim();
     
     // Strip markdown blocks if present
-    if (text.startsWith('```json')) {
-      text = text.replace(/^```json/, '').replace(/```$/, '').trim();
-    } else if (text.startsWith('```')) {
-      text = text.replace(/^```/, '').replace(/```$/, '').trim();
+    if (text.startsWith('\`\`\`json')) {
+      text = text.replace(/^\`\`\`json/, '').replace(/\`\`\`$/, '').trim();
+    } else if (text.startsWith('\`\`\`')) {
+      text = text.replace(/^\`\`\`/, '').replace(/\`\`\`$/, '').trim();
     }
 
     const parsedData = JSON.parse(text);
@@ -109,9 +109,9 @@ router.post('/process', upload.single('invoice'), async (req: Request, res: Resp
       status: 'RECEIVED'
     });
 
-  } catch (error) {
+  } catch (error: any) {
     console.error('AI Processing Error:', error);
-    res.status(500).json({ error: 'Failed to process invoice with AI.' });
+    res.status(500).json({ error: `AI Error: ${error.message || 'Failed to process invoice with AI.'}` });
   }
 });
 
