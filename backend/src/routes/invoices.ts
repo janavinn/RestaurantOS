@@ -2,9 +2,8 @@ import { Router, type Request, type Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import jwt from 'jsonwebtoken';
 import multer from 'multer';
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import OpenAI from 'openai';
 import * as xlsx from 'xlsx';
-import fs from 'fs';
 
 const router = Router();
 const prisma = new PrismaClient();
@@ -13,8 +12,8 @@ const JWT_SECRET = process.env.JWT_SECRET || 'super_secret_dev_key';
 // Setup multer for in-memory file uploads
 const upload = multer({ storage: multer.memoryStorage() });
 
-// Setup Gemini
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || 'mock_key_for_now');
+// Setup OpenAI
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY || 'mock_key_for_now' });
 
 // Auth middleware
 const authenticate = (req: Request, res: Response, next: any) => {
@@ -38,9 +37,8 @@ router.post('/process', upload.single('invoice'), async (req: Request, res: Resp
   }
 
   try {
-    if (!process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY === 'mock_key_for_now') {
-      // Mock mode for local testing if API key isn't provided
-      console.log('No GEMINI_API_KEY provided, returning mock data.');
+    if (!process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY === 'mock_key_for_now') {
+      console.log('No OPENAI_API_KEY provided, returning mock data.');
       return res.json({
         supplier: 'Andrews, Kirby and Valdez',
         invoiceNumber: 'INV-12345',
@@ -51,17 +49,10 @@ router.post('/process', upload.single('invoice'), async (req: Request, res: Resp
       });
     }
 
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
-    
-    // Prepare image part
-    const imagePart = {
-      inlineData: {
-        data: req.file.buffer.toString('base64'),
-        mimeType: req.file.mimetype
-      }
-    };
+    const base64Image = req.file.buffer.toString('base64');
+    const dataUrl = \data:\;base64,\\;
 
-    const prompt = `
+    const prompt = \
       You are an expert AI invoice processor.
       Extract the following information from the provided invoice image:
       1. invoiceNumber: The unique invoice number or ID.
@@ -85,17 +76,34 @@ router.post('/process', upload.single('invoice'), async (req: Request, res: Resp
           }
         ]
       }
-    `;
+    \;
 
-    const result = await model.generateContent([prompt, imagePart]);
-    const response = await result.response;
-    let text = response.text().trim();
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+        {
+          role: "user",
+          content: [
+            { type: "text", text: prompt },
+            {
+              type: "image_url",
+              image_url: {
+                url: dataUrl,
+              },
+            },
+          ],
+        },
+      ],
+      response_format: { type: "json_object" },
+    });
+
+    let text = response.choices[0].message.content || "{}";
     
     // Strip markdown blocks if present
-    if (text.startsWith('\`\`\`json')) {
-      text = text.replace(/^\`\`\`json/, '').replace(/\`\`\`$/, '').trim();
-    } else if (text.startsWith('\`\`\`')) {
-      text = text.replace(/^\`\`\`/, '').replace(/\`\`\`$/, '').trim();
+    if (text.startsWith('\\\json')) {
+      text = text.replace(/^\\\json/, '').replace(/\\\$/, '').trim();
+    } else if (text.startsWith('\\\')) {
+      text = text.replace(/^\\\/, '').replace(/\\\$/, '').trim();
     }
 
     const parsedData = JSON.parse(text);
@@ -111,7 +119,7 @@ router.post('/process', upload.single('invoice'), async (req: Request, res: Resp
 
   } catch (error: any) {
     console.error('AI Processing Error:', error);
-    res.status(500).json({ error: `AI Error: ${error.message || 'Failed to process invoice with AI.'}` });
+    res.status(500).json({ error: \AI Error: \\ });
   }
 });
 
@@ -138,7 +146,7 @@ router.post('/confirm', async (req: Request, res: Response): Promise<any> => {
       data: {
         restaurantId,
         category: 'Supplier Invoice',
-        description: `Invoice from ${supplier}`,
+        description: \Invoice from \\,
         amount: parseFloat(total),
         status: 'APPROVED',
         date: new Date(date || Date.now())

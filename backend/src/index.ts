@@ -322,12 +322,13 @@ app.post('/api/recipes/generate', async (req: Request, res: Response): Promise<a
       });
     }
 
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const OpenAI = require('openai');
+    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
     
     const prompt = `You are an expert chef. The user has the following ingredients available: ${ingredients.join(', ')}.
 Generate a highly creative, delicious recipe using these ingredients. You can assume basic pantry staples (salt, pepper, oil, water, garlic, onions) are available.
-Return the result strictly as a raw JSON object (without any markdown blocks like \`\`\`json) with the following structure:
+
+Respond strictly in JSON format matching this schema:
 {
   "name": "Recipe Name",
   "category": "Category (e.g. Mains, Appetizer)",
@@ -338,13 +339,23 @@ Return the result strictly as a raw JSON object (without any markdown blocks lik
   "image": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500&q=80",
   "ingredients": [ { "name": "Ingredient Name", "quantity": "Amount" } ],
   "instructions": [ "Step 1", "Step 2" ]
-}`;
+}
+No markdown backticks, just raw JSON.`;
 
-    const result = await model.generateContent(prompt);
-    const responseText = result.response.text().trim();
-    const jsonStr = responseText.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
-    const recipe = JSON.parse(jsonStr);
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [{ role: "user", content: prompt }],
+      response_format: { type: "json_object" },
+    });
     
+    let text = response.choices[0].message.content || "{}";
+    
+    if (text.startsWith('```json')) {
+      text = text.replace(/^```json/, '').replace(/```$/, '').trim();
+    } else if (text.startsWith('```')) {
+      text = text.replace(/^```/, '').replace(/```$/, '').trim();
+    }
+    const recipe = JSON.parse(text);
     res.json(recipe);
   } catch (error) {
     console.error('Error generating recipe:', error);
