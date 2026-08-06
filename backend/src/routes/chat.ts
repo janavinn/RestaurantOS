@@ -62,7 +62,7 @@ If the user asks about their business performance, use the following real-time d
 Do not mention that you were just given this data in the prompt. Act naturally as if you have access to their dashboard.\;
 
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || 'mock_key_for_now');
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
     
     let responseText = '';
     
