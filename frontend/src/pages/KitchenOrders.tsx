@@ -44,7 +44,8 @@ export default function ChefDashboard() {
       const newOrders = orders.filter(o => o.status === 'NEW');
       if (newOrders.length > 0 && voiceEnabled && 'speechSynthesis' in window) {
         const latestOrder = newOrders[newOrders.length - 1];
-        const text = `New order received for Table ${latestOrder.table?.tableNumber || 'Takeaway'}. Please check the dashboard.`;
+        const itemsText = latestOrder.items?.map((it: any) => `${it.quantity} ${it.menuItem?.name || 'item'}`).join(', and ') || 'No items';
+        const text = `New order received for Table ${latestOrder.table?.tableNumber || 'Takeaway'}. The order is: ${itemsText}.`;
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.rate = 1.0;
         utterance.pitch = 1.1;
