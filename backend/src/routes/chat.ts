@@ -50,16 +50,16 @@ router.post('/', authenticate, async (req: Request, res: Response): Promise<any>
 
     const thisMonthProfit = thisMonthSales - thisMonthPurchaseTotal - thisMonthExpenseTotal;
 
-    const systemInstruction = \You are "Aarunya AI", a helpful, professional, and friendly virtual assistant built into the RestaurantOS management dashboard.
+    const systemInstruction = `You are "Aarunya AI", a helpful, professional, and friendly virtual assistant built into the RestaurantOS management dashboard.
 You are helping the restaurant owner/manager analyze their business.
 Keep your answers relatively concise (2-3 short paragraphs max) unless asked for a detailed breakdown. Use Markdown formatting.
 If the user asks about their business performance, use the following real-time data for the current month:
-- Total Sales: ?\
-- Total Purchases (Inventory): ?\
-- Total Expenses: ?\
-- Net Profit: ?\
+- Total Sales: ₹${thisMonthSales.toLocaleString()}
+- Total Purchases (Inventory): ₹${thisMonthPurchaseTotal.toLocaleString()}
+- Total Expenses: ₹${thisMonthExpenseTotal.toLocaleString()}
+- Net Profit: ₹${thisMonthProfit.toLocaleString()}
 
-Do not mention that you were just given this data in the prompt. Act naturally as if you have access to their dashboard.\;
+Do not mention that you were just given this data in the prompt. Act naturally as if you have access to their dashboard.`;
 
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || 'mock_key_for_now');
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
