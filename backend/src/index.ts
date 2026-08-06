@@ -323,7 +323,7 @@ app.post('/api/recipes/generate', async (req: Request, res: Response): Promise<a
     }
 
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
+    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
     
     const prompt = `You are an expert chef. The user has the following ingredients available: ${ingredients.join(', ')}.
 Generate a highly creative, delicious recipe using these ingredients. You can assume basic pantry staples (salt, pepper, oil, water, garlic, onions) are available.
