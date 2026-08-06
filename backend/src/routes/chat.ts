@@ -74,9 +74,9 @@ Do not mention that you were just given this data in the prompt. Act naturally a
         contents: [{ role: 'user', parts: [{ text: systemInstruction + "\n\nUser: " + prompt }] }]
       });
       responseText = result.response.text();
-    } catch (apiError) {
+    } catch (apiError: any) {
       console.error('Gemini API Error:', apiError);
-      responseText = `(Mock AI) You have ${thisMonthOrders.length} paid orders this month totaling ₹${thisMonthSales.toLocaleString()}. Your net profit is ₹${thisMonthProfit.toLocaleString()}. You also have 3 pending notifications regarding inventory.`;
+      responseText = `API Error: ${apiError.message || apiError}. Please check your Gemini API key in Vercel settings.`;
     }
     
     res.json({ response: responseText });
