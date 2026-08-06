@@ -83,8 +83,8 @@ export default function MenuManagement() {
     try {
       const token = localStorage.getItem('token');
       const url = dishForm.id 
-        ? `/api/menu/${dishForm.id}` 
-        : '/api/menu';
+        ? `${import.meta.env.VITE_API_URL || ''}/api/menu/${dishForm.id}` 
+        : `${import.meta.env.VITE_API_URL || ''}/api/menu`;
       const method = dishForm.id ? 'PUT' : 'POST';
 
       const res = await fetch(url, {
