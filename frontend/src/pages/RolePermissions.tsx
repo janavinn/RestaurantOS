@@ -161,7 +161,7 @@ export default function RolePermissions() {
       </div>
 
       {/* Top Metrics Cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px', marginBottom: '24px' }}>
+      <div className="mobile-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px', marginBottom: '24px' }}>
         <div className="metric-card" style={{ background: '#131313', padding: '24px', borderRadius: '12px', border: '1px solid #1f2330', boxShadow: '0 1px 3px rgba(0,0,0,0.02)', display: 'flex', gap: '16px', alignItems: 'center' }}>
           <div style={{ background: 'rgba(180, 134, 0, 0.15)', color: '#b48600', padding: '16px', borderRadius: '12px' }}><Users size={24} /></div>
           <div>

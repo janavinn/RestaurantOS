@@ -92,7 +92,7 @@ export default function CashierBilling() {
           No active orders waiting for billing.
         </div>
       ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '24px' }}>
+        <div className="mobile-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '24px' }}>
           {orders.map(order => (
             <div 
               key={order.id}

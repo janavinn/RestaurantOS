@@ -228,7 +228,7 @@ export default function StaffManagement() {
       </div>
 
       {/* METRIC CARDS */}
-      <div className="metrics-grid" style={{ gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px', marginBottom: '32px' }}>
+      <div className="metrics-grid mobile-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px', marginBottom: '32px' }}>
         {userRole === 'MANAGER' ? (
           <>
             <div className="metric-card" style={{ padding: '24px', background: '#131313', border: 'none', borderBottom: '2px solid #3b82f6', borderRadius: '12px' }}>

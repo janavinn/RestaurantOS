@@ -71,7 +71,7 @@ export default function ReportsAnalytics() {
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px', marginBottom: '24px' }}>
+      <div className="mobile-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px', marginBottom: '24px' }}>
         {METRICS_UI.map(metric => (
           <div key={metric.id} style={{ background: '#131313', borderRadius: '12px', border: '1px solid #1f2330', padding: '24px', display: 'flex', gap: '16px', alignItems: 'flex-start', boxShadow: '0 1px 3px rgba(0,0,0,0.2)' }}>
             <div style={{ background: metric.bg, color: metric.color, padding: '12px', borderRadius: '12px' }}>
@@ -89,7 +89,7 @@ export default function ReportsAnalytics() {
       </div>
 
       {/* Main Charts Area */}
-      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '24px' }}>
+      <div className="mobile-grid" style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '24px' }}>
         
         {/* Revenue vs Profit Chart */}
         <div style={{ background: '#131313', borderRadius: '16px', border: '1px solid #1f2330', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.2)', padding: '24px' }}>

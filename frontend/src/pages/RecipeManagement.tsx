@@ -228,7 +228,7 @@ export default function RecipeManagement() {
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 2fr', gap: '24px', height: 'calc(100vh - 150px)' }}>
+      <div className="mobile-grid" style={{ display: 'grid', gridTemplateColumns: '1.2fr 2fr', gap: '24px', height: 'calc(100vh - 150px)' }}>
         
         {/* LEFT PANE: AI Chatbot */}
         <div style={{ background: '#161922', borderRadius: '16px', border: '1px solid #1f2330', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
@@ -369,7 +369,7 @@ export default function RecipeManagement() {
             </div>
 
             {/* Ingredients & Instructions Grid */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.5fr', flex: 1, overflowY: 'hidden' }}>
+            <div className="mobile-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1.5fr', flex: 1, overflowY: 'hidden' }}>
               
               {/* Ingredients List */}
               <div style={{ padding: '32px', borderRight: '1px solid #1f2330', overflowY: 'auto' }}>

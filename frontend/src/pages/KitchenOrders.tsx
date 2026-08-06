@@ -141,7 +141,7 @@ export default function ChefDashboard() {
       </div>
 
       {/* TOP STATS */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px', marginBottom: '24px' }}>
+      <div className="mobile-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px', marginBottom: '24px' }}>
         <div style={{ background: '#161922', borderRadius: '12px', padding: '24px', display: 'flex', alignItems: 'center', gap: '20px', border: '1px solid #1f2330' }}>
           <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: 'rgba(249, 115, 22, 0.1)', border: '1px solid rgba(249, 115, 22, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <ClipboardList size={28} color="#f97316" />
@@ -188,7 +188,7 @@ export default function ChefDashboard() {
       </div>
 
       {/* MAIN GRID */}
-      <div style={{ display: 'grid', gridTemplateColumns: '2.5fr 1fr', gap: '24px' }}>
+      <div className="mobile-grid" style={{ display: 'grid', gridTemplateColumns: '2.5fr 1fr', gap: '24px' }}>
         
         {/* LEFT COLUMN */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
@@ -359,7 +359,7 @@ export default function ChefDashboard() {
           {/* Quick Actions */}
           <div style={{ background: '#161922', borderRadius: '12px', border: '1px solid #1f2330', padding: '24px' }}>
             <h2 style={{ margin: '0 0 16px 0', fontSize: '1.1rem', fontWeight: 600 }}>Quick Actions</h2>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+            <div className="mobile-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
               <button onClick={() => navigate('/ingredients')} style={{ background: '#1f2330', border: 'none', padding: '12px', borderRadius: '8px', color: '#f8fafc', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.8rem', cursor: 'pointer' }}>
                 <Utensils size={16} color="#22c55e" /> Ingredients
               </button>

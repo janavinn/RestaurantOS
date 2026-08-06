@@ -223,7 +223,7 @@ export default function SupplierInvoices() {
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px', marginBottom: '24px' }}>
+      <div className="mobile-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px', marginBottom: '24px' }}>
         {METRICS_DATA.map(metric => (
           <div key={metric.id} style={{ background: '#131313', borderRadius: '12px', border: '1px solid #1f2330', padding: '24px', display: 'flex', gap: '16px', alignItems: 'flex-start', boxShadow: '0 1px 3px rgba(0,0,0,0.2)' }}>
             <div style={{ background: metric.bg, color: metric.color, padding: '16px', borderRadius: '12px' }}>
@@ -238,7 +238,7 @@ export default function SupplierInvoices() {
         ))}
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '24px' }}>
+      <div className="mobile-grid" style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '24px' }}>
         
         <div style={{ background: '#131313', borderRadius: '16px', border: '1px solid #1f2330', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.2)', overflow: 'hidden' }}>
           <div style={{ padding: '20px 24px', borderBottom: '1px solid #1f2330', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>

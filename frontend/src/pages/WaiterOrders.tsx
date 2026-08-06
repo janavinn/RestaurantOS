@@ -85,7 +85,7 @@ export default function WaiterOrders() {
           No active orders. Head to the Tables tab to take a new order!
         </div>
       ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: '24px' }}>
+        <div className="mobile-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: '24px' }}>
           {activeOrders.map(order => (
             <div 
               key={order.id} 

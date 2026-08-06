@@ -50,7 +50,7 @@ export default function ProfileSettings() {
             </div>
 
             {/* Form Fields */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+            <div className="mobile-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
               <div>
                 <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#cbd5e1', marginBottom: '8px' }}>First Name</label>
                 <div style={{ position: 'relative' }}>

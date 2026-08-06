@@ -74,7 +74,7 @@ export default function CashierPayments() {
           No pending payments. Generate a bill first.
         </div>
       ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '24px' }}>
+        <div className="mobile-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '24px' }}>
           {orders.map(order => (
             <div 
               key={order.id}
@@ -109,7 +109,7 @@ export default function CashierPayments() {
               ₹{(selectedOrder.finalTotal || selectedOrder.total).toFixed(2)}
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '16px', marginBottom: '32px' }}>
+            <div className="mobile-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '16px', marginBottom: '32px' }}>
               <button 
                 onClick={() => setPaymentMethod('CASH')}
                 style={{ padding: '20px', borderRadius: '16px', border: `2px solid ${paymentMethod === 'CASH' ? '#10b981' : '#1f2330'}`, background: paymentMethod === 'CASH' ? '#10b98120' : '#0a0a0a', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', transition: 'all 0.2s' }}

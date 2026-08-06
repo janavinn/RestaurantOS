@@ -251,7 +251,7 @@ export default function TableManagement() {
       `}</style>
 
       {/* Stats Row */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '24px', marginBottom: '32px' }}>
+      <div className="mobile-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '24px', marginBottom: '32px' }}>
         <div style={{ background: '#161922', padding: '24px', borderRadius: '16px', border: '1px solid #1f2330', display: 'flex', alignItems: 'center', gap: '20px' }}>
           <div style={{ background: '#3b82f620', padding: '16px', borderRadius: '50%' }}>
             <LayoutDashboard size={28} color="#3b82f6" />
@@ -297,7 +297,7 @@ export default function TableManagement() {
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '24px' }}>
+      <div className="mobile-grid" style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '24px' }}>
         
         {/* Left Col: Table Grid */}
         <div style={{ background: '#161922', borderRadius: '16px', border: '1px solid #1f2330', padding: '24px', display: 'flex', flexDirection: 'column' }}>
@@ -328,7 +328,7 @@ export default function TableManagement() {
           {loading ? (
             <div style={{ textAlign: 'center', color: '#64748b', padding: '40px' }}>Loading floor plan...</div>
           ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '16px', gridAutoRows: 'max-content' }}>
+            <div className="mobile-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '16px', gridAutoRows: 'max-content' }}>
               {tables.map(t => {
                 const colors = getStatusColor(t.status);
                 return (

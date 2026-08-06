@@ -226,7 +226,7 @@ export default function MenuManagement() {
       </div>
 
       {/* Top Metrics Cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px', marginBottom: '24px' }}>
+      <div className="mobile-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px', marginBottom: '24px' }}>
         {METRICS_DATA.map(metric => (
           <div key={metric.id} style={{ background: '#161922', borderRadius: '12px', border: '1px solid #1f2330', boxShadow: '0 1px 3px rgba(0,0,0,0.2)', overflow: 'hidden' }}>
             <div style={{ padding: '24px', display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
@@ -288,7 +288,7 @@ export default function MenuManagement() {
             </div>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '20px' }}>
+          <div className="mobile-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '20px' }}>
             {filteredItems.length === 0 ? (
               <div style={{ gridColumn: '1 / -1', padding: '40px', textAlign: 'center', color: '#9ca3af', background: '#161922', borderRadius: '12px', border: '1px dashed #cbd5e1' }}>
                 No menu items found. Try adjusting your search or category.

@@ -159,7 +159,7 @@ export default function ExpenseManagement() {
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px', marginBottom: '24px' }}>
+      <div className="mobile-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px', marginBottom: '24px' }}>
         {metricsData.map(metric => (
           <div key={metric.id} style={{ background: '#131313', borderRadius: '12px', border: '1px solid #1f2330', boxShadow: '0 1px 3px rgba(0,0,0,0.02)', overflow: 'hidden' }}>
             <div style={{ padding: '24px', display: 'flex', gap: '16px', alignItems: 'flex-start' }}>

@@ -36,7 +36,7 @@ export default function CashierDashboard() {
     <div style={{ padding: '40px', background: '#0a0a0a', minHeight: '100vh', fontFamily: 'Inter, sans-serif' }}>
       <h1 style={{ margin: '0 0 32px 0', fontSize: '2rem', fontWeight: 700, color: '#f8fafc' }}>Cashier Dashboard</h1>
       
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '24px' }}>
+      <div className="mobile-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '24px' }}>
         <div style={{ background: '#131313', padding: '24px', borderRadius: '16px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)', display: 'flex', alignItems: 'center', gap: '16px' }}>
           <div style={{ background: '#1e1b4b', color: '#818cf8', padding: '16px', borderRadius: '50%' }}>
             <Receipt size={32} />

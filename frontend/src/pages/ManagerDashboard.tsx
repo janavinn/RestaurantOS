@@ -88,7 +88,7 @@ export default function ManagerDashboard() {
       </div>
 
       {/* Core Operational Metrics */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '24px', marginBottom: '32px' }}>
+      <div className="mobile-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '24px', marginBottom: '32px' }}>
         
         {/* Orders Widget */}
         <div style={{ background: '#161922', borderRadius: '16px', padding: '24px', border: '1px solid #1f2330' }}>
@@ -139,7 +139,7 @@ export default function ManagerDashboard() {
       </div>
 
       {/* Main Sections */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: '24px' }}>
+      <div className="mobile-grid" style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: '24px' }}>
         
         {/* Left Column: Staff & Operations */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>

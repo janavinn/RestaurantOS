@@ -164,7 +164,7 @@ export default function SupplierManagement() {
       </div>
 
       {/* Top Metrics Cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px', marginBottom: '24px' }}>
+      <div className="mobile-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px', marginBottom: '24px' }}>
         {metricsData.map(metric => (
           <div key={metric.id} style={{ background: '#131313', borderRadius: '12px', border: '1px solid #1f2330', boxShadow: '0 1px 3px rgba(0,0,0,0.02)', overflow: 'hidden' }}>
             <div style={{ padding: '24px', display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
@@ -417,7 +417,7 @@ export default function SupplierManagement() {
                   <input type="text" value={newSupplier.contact} onChange={e => setNewSupplier({...newSupplier, contact: e.target.value})} style={{ padding: '10px 12px', borderRadius: '8px', border: '1px solid #1f2330', outline: 'none' }} placeholder="e.g. Ravi Kumar" />
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                <div className="mobile-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
                   <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                     <label style={{ fontSize: '0.875rem', fontWeight: 500, color: '#e2e8f0' }}>Phone</label>
                     <input type="tel" value={newSupplier.phone} onChange={e => setNewSupplier({...newSupplier, phone: e.target.value})} style={{ padding: '10px 12px', borderRadius: '8px', border: '1px solid #1f2330', outline: 'none' }} placeholder="+91 98765 43210" />
@@ -428,7 +428,7 @@ export default function SupplierManagement() {
                   </div>
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                <div className="mobile-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
                   <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                     <label style={{ fontSize: '0.875rem', fontWeight: 500, color: '#e2e8f0' }}>Total Bill Amount (₹)</label>
                     <input type="number" min="0" value={newSupplier.purchases} onChange={e => setNewSupplier({...newSupplier, purchases: e.target.value})} style={{ padding: '10px 12px', borderRadius: '8px', border: '1px solid #1f2330', outline: 'none' }} placeholder="0" />

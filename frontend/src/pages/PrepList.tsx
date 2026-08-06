@@ -221,7 +221,7 @@ export default function PrepList() {
       </div>
 
       {/* Kanban Board */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px', flex: 1, minHeight: '500px' }}>
+      <div className="mobile-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px', flex: 1, minHeight: '500px' }}>
         {renderColumn('todo', 'To Do', Clock, '#64748b')}
         {renderColumn('in-progress', 'In Progress', PlayCircle, '#f59e0b')}
         {renderColumn('done', 'Done', CheckCircle2, '#22c55e')}

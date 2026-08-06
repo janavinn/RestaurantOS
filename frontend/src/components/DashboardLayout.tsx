@@ -164,8 +164,11 @@ export default function DashboardLayout() {
 
   return (
     <div className={`dashboard-layout ${isSidebarOpen ? 'sidebar-open' : 'sidebar-closed'}`} style={['CHEF', 'WAITER', 'MANAGER'].includes(userRole) ? { backgroundColor: '#0a0a0a', color: '#f8fafc' } : {}}>
+      {/* Mobile Sidebar Overlay */}
+      <div className="mobile-sidebar-overlay" style={{ display: 'none' }} onClick={() => setIsSidebarOpen(false)}></div>
+      
       {/* SIDEBAR */}
-      <aside className="sidebar" style={['CHEF', 'WAITER', 'MANAGER'].includes(userRole) ? { backgroundColor: '#0a0a0a', borderRight: '1px solid #1f2330' } : {}}>
+      <aside className={`sidebar ${isSidebarOpen ? 'open' : ''}`} style={['CHEF', 'WAITER', 'MANAGER'].includes(userRole) ? { backgroundColor: '#0a0a0a', borderRight: '1px solid #1f2330' } : {}}>
         <div className="sidebar-header" style={{ padding: '24px 20px', borderBottom: 'none', display: 'flex', alignItems: 'center', justifyContent: isSidebarOpen ? 'space-between' : 'center' }}>
           {isSidebarOpen && !['CHEF', 'WAITER'].includes(userRole) && (
             <div style={{ background: '#ffffff', padding: '12px', borderRadius: '16px', boxShadow: '0 4px 12px rgba(0,0,0,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -377,8 +380,11 @@ export default function DashboardLayout() {
         {/* HEADER */}
         {!['CHEF', 'WAITER'].includes(userRole) && (
           <header className="top-header" style={{ display: 'flex', justifyContent: 'space-between', padding: '0 32px' }}>
-            <div className="header-left" style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
-              <div className="search-bar" style={{ width: '400px', position: 'relative' }}>
+            <div className="header-left" style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+              <button className="mobile-menu-btn" style={{ display: 'none' }} onClick={() => setIsSidebarOpen(true)}>
+                <MenuIcon size={24} />
+              </button>
+              <div className="search-bar hide-on-mobile" style={{ width: '400px', position: 'relative' }}>
                 <input 
                   id="global-search-input"
                   type="text" 
@@ -507,6 +513,11 @@ export default function DashboardLayout() {
 
         {/* DASHBOARD BODY */}
         <div className="dashboard-body" style={['CHEF', 'WAITER'].includes(userRole) ? { padding: '32px 40px' } : { padding: 0 }}>
+          {['CHEF', 'WAITER'].includes(userRole) && (
+            <button className="mobile-menu-btn" style={{ display: 'none', position: 'absolute', top: '16px', left: '16px', zIndex: 10, background: '#1f2330', borderRadius: '8px' }} onClick={() => setIsSidebarOpen(true)}>
+              <MenuIcon size={24} />
+            </button>
+          )}
           <Outlet />
         </div>
       </main>

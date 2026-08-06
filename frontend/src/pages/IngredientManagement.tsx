@@ -140,7 +140,7 @@ export default function IngredientManagement() {
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '24px' }}>
+      <div className="mobile-grid" style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '24px' }}>
         
         {/* Left Column: Ingredients List */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>

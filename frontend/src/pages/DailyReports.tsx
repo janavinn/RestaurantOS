@@ -77,7 +77,7 @@ export default function DailyReports() {
       {loading || !data ? (
         <div style={{ textAlign: 'center', padding: '64px', color: '#94a3b8' }}>Loading reports...</div>
       ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '24px' }}>
+        <div className="mobile-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '24px' }}>
           
           {/* Card 1: Today's Sales */}
           <div style={{ background: '#131313', padding: '24px', borderRadius: '16px', border: '1px solid #1f2330', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.02)' }}>

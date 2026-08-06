@@ -1361,3 +1361,94 @@ body {
 .animate-bounce-slow {
   animation: bounceAnimation 4s ease-in-out infinite;
 }
+
+/* =========================================
+   MOBILE RESPONSIVE OVERRIDES
+   ========================================= */
+@media (max-width: 1024px) {
+  .mobile-grid { grid-template-columns: repeat(2, 1fr) !important; }
+}
+
+@media (max-width: 768px) {
+  /* Global Grid & Flex Resets */
+  .mobile-grid {
+    grid-template-columns: 1fr !important;
+    grid-auto-rows: min-content;
+  }
+  .mobile-stack {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+  .mobile-stack > * {
+    width: 100% !important;
+  }
+  
+  /* Hide elements on mobile */
+  .hide-on-mobile {
+    display: none !important;
+  }
+
+  /* Padding adjustments */
+  .responsive-padding {
+    padding: 16px !important;
+  }
+
+  /* Dashboard Overrides */
+  .dashboard-body {
+    padding: 16px !important;
+  }
+  .top-header {
+    padding: 0 16px !important;
+  }
+  .metrics-grid, .middle-row, .overview-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Login Screen Overrides */
+  .login-layout {
+    flex-direction: column;
+  }
+  .login-hero {
+    padding: 32px 20px;
+    min-height: 250px;
+    flex: none;
+  }
+  .hero-title {
+    font-size: 2rem;
+  }
+  .login-form-container {
+    padding: 24px 16px;
+  }
+  
+  /* Mobile Sidebar Toggle Overlay */
+  .mobile-sidebar-overlay {
+    display: block !important;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 40;
+  }
+  
+  .sidebar {
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    z-index: 50;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  }
+  
+  .sidebar.open {
+    transform: translateX(0);
+  }
+  
+  .mobile-menu-btn {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: #f8fafc;
+    cursor: pointer;
+    padding: 8px;
+  }
+}

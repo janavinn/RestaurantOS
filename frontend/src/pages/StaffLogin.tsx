@@ -183,7 +183,7 @@ export default function StaffLogin() {
       <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(5, 5, 5, 0.9)', backdropFilter: 'blur(10px)', zIndex: 0 }} />
 
       {/* Main Container */}
-      <div className="main-container" style={{ 
+      <div className="main-container mobile-stack" style={{ 
         position: 'relative', 
         zIndex: 10, 
         margin: 0, 
@@ -192,7 +192,7 @@ export default function StaffLogin() {
         height: '100vh',
         display: 'flex',
         borderRadius: 0,
-        overflow: 'hidden',
+        overflow: 'auto',
         backgroundColor: '#17171a',
         border: 'none'
       }}>
@@ -253,7 +253,7 @@ export default function StaffLogin() {
 
           {/* Grid Area - EXACTLY 3 COLUMNS NO BORDERS */}
           <div className="scroll-area hide-scrollbar" style={{ flex: 1, overflowY: 'auto', paddingRight: '8px', marginBottom: '24px' }}>
-            <div className="grid-container" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px' }}>
+            <div className="grid-container mobile-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px' }}>
               
               {!selectedRole ? (
                 filteredRoles.map(role => {
@@ -367,8 +367,8 @@ export default function StaffLogin() {
 
         </div>
 
-        {/* RIGHT PANEL */}
-        <div className="right-panel" style={{ width: '380px', backgroundColor: '#131518', borderLeft: '1px solid #2a2a2a', padding: '32px 40px', display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative' }}>
+        {/* RIGHT PANEL - PIN ENTRY */}
+        <div className="right-panel mobile-stack" style={{ flex: '0 0 350px', backgroundColor: '#131316', borderLeft: '1px solid #1f2330', padding: '40px 32px', display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative' }}>
           
           {/* Custom Logo in Right Panel */}
           <div style={{ marginBottom: '24px' }}>
@@ -401,7 +401,7 @@ export default function StaffLogin() {
               {error && <div style={{ color: '#ef4444', marginBottom: '8px', fontSize: '0.85rem' }}>{error}</div>}
 
               {/* Numpad */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', width: '100%', maxWidth: '240px', marginBottom: 'auto' }}>
+              <div className="mobile-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', width: '100%', maxWidth: '240px', marginBottom: 'auto' }}>
                 {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => (
                   <button 
                     key={num}

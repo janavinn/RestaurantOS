@@ -71,7 +71,7 @@ export default function Preferences() {
               <Globe size={20} color="#4f46e5" /> Localization
             </h3>
             
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+            <div className="mobile-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
               <div>
                 <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#cbd5e1', marginBottom: '8px' }}>Currency</label>
                 <select style={{ width: '100%', padding: '10px 12px', border: '1px solid #1f2330', borderRadius: '8px', outline: 'none', fontSize: '0.95rem', color: '#f8fafc', background: '#131313' }}>
