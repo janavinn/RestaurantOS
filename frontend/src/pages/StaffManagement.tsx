@@ -221,11 +221,76 @@ export default function StaffManagement() {
           </p>
         </div>
         {userRole !== 'MANAGER' && (
-          <button className="btn-primary" onClick={() => setIsModalOpen(true)} style={{ display: 'flex', gap: '8px', alignItems: 'center', background: '#b48600', padding: '12px 24px', width: 'max-content', margin: 0 }}>
-            <UserPlus size={18} /> Add New Staff
+          <button className="btn-primary" onClick={() => setIsModalOpen(!isModalOpen)} style={{ display: 'flex', gap: '8px', alignItems: 'center', background: '#b48600', padding: '12px 24px', width: 'max-content', margin: 0, color: '#0a0a0a', fontWeight: 600, border: 'none', borderRadius: '8px', cursor: 'pointer' }}>
+            {isModalOpen ? <X size={18} /> : <UserPlus size={18} />} 
+            {isModalOpen ? 'Cancel' : 'Add New Staff'}
           </button>
         )}
       </div>
+
+      {/* Inline Add Staff Form (Only for OWNER) */}
+      {isModalOpen && userRole === 'OWNER' && (
+        <div style={{ background: '#131313', borderRadius: '12px', border: '1px solid #1f2330', padding: '24px', marginBottom: '32px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.2)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px', borderBottom: '1px solid #1f2330', paddingBottom: '16px' }}>
+            <h2 style={{ fontSize: '1.25rem', fontWeight: 600, color: '#f8fafc', margin: 0 }}>Invite New Staff</h2>
+          </div>
+          
+          {!inviteResult ? (
+            <form onSubmit={handleInvite}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', marginBottom: '24px' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                  <label style={{ fontSize: '0.875rem', fontWeight: 500, color: '#e2e8f0' }}>Full Name</label>
+                  <input type="text" required value={inviteForm.name} onChange={e => setInviteForm({...inviteForm, name: e.target.value})} style={{ padding: '10px 12px', borderRadius: '8px', border: '1px solid #1f2330', background: '#0a0a0a', color: '#f8fafc', outline: 'none' }} placeholder="John Doe" />
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                  <label style={{ fontSize: '0.875rem', fontWeight: 500, color: '#e2e8f0' }}>Email Address</label>
+                  <input type="email" required value={inviteForm.email} onChange={e => setInviteForm({...inviteForm, email: e.target.value})} style={{ padding: '10px 12px', borderRadius: '8px', border: '1px solid #1f2330', background: '#0a0a0a', color: '#f8fafc', outline: 'none' }} placeholder="john@example.com" />
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                  <label style={{ fontSize: '0.875rem', fontWeight: 500, color: '#e2e8f0' }}>Assign Role</label>
+                  <select value={inviteForm.role} onChange={e => setInviteForm({...inviteForm, role: e.target.value})} style={{ padding: '10px 12px', borderRadius: '8px', border: '1px solid #1f2330', background: '#0a0a0a', color: '#f8fafc', outline: 'none', cursor: 'pointer' }}>
+                    <option value="MANAGER">Manager</option>
+                    <option value="CHEF">Chef (Kitchen)</option>
+                    <option value="WAITER">Waiter (Front of House)</option>
+                    <option value="CASHIER">Cashier (Billing)</option>
+                  </select>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                  <label style={{ fontSize: '0.875rem', fontWeight: 500, color: '#e2e8f0' }}>Assign Shift</label>
+                  <select value={inviteForm.shift} onChange={e => setInviteForm({...inviteForm, shift: e.target.value})} style={{ padding: '10px 12px', borderRadius: '8px', border: '1px solid #1f2330', background: '#0a0a0a', color: '#f8fafc', outline: 'none', cursor: 'pointer' }}>
+                    <option value="Morning">Morning</option>
+                    <option value="Evening">Evening</option>
+                    <option value="Full Day">Full Day</option>
+                  </select>
+                </div>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
+                <button type="button" onClick={() => setIsModalOpen(false)} style={{ padding: '10px 16px', borderRadius: '8px', background: 'transparent', border: '1px solid #1f2330', fontWeight: 500, color: '#9ca3af', cursor: 'pointer' }}>Cancel</button>
+                <button type="submit" style={{ padding: '10px 16px', borderRadius: '8px', background: '#6366f1', border: 'none', fontWeight: 500, color: 'white', cursor: 'pointer' }}>Send Invite</button>
+              </div>
+            </form>
+          ) : (
+            <div style={{ padding: '24px', textAlign: 'center' }}>
+              <div style={{ background: 'rgba(21, 128, 61, 0.2)', color: '#4ade80', width: '48px', height: '48px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
+                <UserCheck size={24} />
+              </div>
+              <h3 style={{ fontSize: '1.25rem', color: '#f8fafc', marginBottom: '8px', fontWeight: 600 }}>Invite Sent!</h3>
+              <p style={{ color: '#9ca3af', fontSize: '0.875rem', marginBottom: '24px' }}>
+                An email has been sent to <strong>{inviteResult.email}</strong>. You can also manually share this invite link:
+              </p>
+              <div style={{ background: '#0a0a0a', border: '1px dashed #1f2330', borderRadius: '8px', padding: '12px', display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '24px', maxWidth: '500px', margin: '0 auto 24px' }}>
+                <input type="text" readOnly value={inviteResult.link} style={{ flex: 1, background: 'none', border: 'none', outline: 'none', color: '#9ca3af', fontSize: '0.875rem' }} />
+                <button onClick={() => { navigator.clipboard.writeText(inviteResult.link); alert('Copied to clipboard!'); }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#b48600' }}>
+                  <Copy size={18} />
+                </button>
+              </div>
+              <button onClick={() => { setIsModalOpen(false); setInviteResult(null); }} style={{ padding: '10px 32px', borderRadius: '8px', background: '#6366f1', border: 'none', fontWeight: 500, color: 'white', cursor: 'pointer' }}>
+                Done
+              </button>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* METRIC CARDS */}
       <div className="metrics-grid mobile-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px', marginBottom: '32px' }}>
@@ -516,72 +581,7 @@ export default function StaffManagement() {
         </div>
       </div>
 
-      {/* Add Staff Modal (Only for OWNER) */}
-      {isModalOpen && userRole === 'OWNER' && (
-        <div className="modal-overlay" style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(15, 23, 42, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
-          <div className="modal-content" style={{ background: '#161922', borderRadius: '16px', width: '100%', maxWidth: '450px', overflow: 'hidden' }}>
-            <div className="modal-header" style={{ display: 'flex', justifyContent: 'space-between', padding: '20px 24px', borderBottom: '1px solid #1f2330' }}>
-              <h2 style={{ fontSize: '1.25rem', fontWeight: 600, color: '#f8fafc', margin: 0 }}>Invite New Staff</h2>
-              <button className="btn-close" onClick={() => setIsModalOpen(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#9ca3af' }}><X size={20} /></button>
-            </div>
-            
-            {!inviteResult ? (
-              <form onSubmit={handleInvite}>
-                <div className="modal-body" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                  <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                    <label style={{ fontSize: '0.875rem', fontWeight: 500, color: '#e2e8f0' }}>Full Name</label>
-                    <input type="text" className="input-field" required value={inviteForm.name} onChange={e => setInviteForm({...inviteForm, name: e.target.value})} style={{ padding: '10px 12px', borderRadius: '8px', border: '1px solid #cbd5e1', outline: 'none' }} placeholder="John Doe" />
-                  </div>
-                  <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                    <label style={{ fontSize: '0.875rem', fontWeight: 500, color: '#e2e8f0' }}>Email Address</label>
-                    <input type="email" className="input-field" required value={inviteForm.email} onChange={e => setInviteForm({...inviteForm, email: e.target.value})} style={{ padding: '10px 12px', borderRadius: '8px', border: '1px solid #cbd5e1', outline: 'none' }} placeholder="john@example.com" />
-                  </div>
-                  <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                    <label style={{ fontSize: '0.875rem', fontWeight: 500, color: '#e2e8f0' }}>Assign Role</label>
-                    <select className="input-field" value={inviteForm.role} onChange={e => setInviteForm({...inviteForm, role: e.target.value})} style={{ padding: '10px 12px', borderRadius: '8px', border: '1px solid #cbd5e1', outline: 'none' }}>
-                      <option value="MANAGER">Manager</option>
-                      <option value="CHEF">Chef (Kitchen)</option>
-                      <option value="WAITER">Waiter (Front of House)</option>
-                      <option value="CASHIER">Cashier (Billing)</option>
-                    </select>
-                  </div>
-                  <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                    <label style={{ fontSize: '0.875rem', fontWeight: 500, color: '#e2e8f0' }}>Assign Shift</label>
-                    <select className="input-field" value={inviteForm.shift} onChange={e => setInviteForm({...inviteForm, shift: e.target.value})} style={{ padding: '10px 12px', borderRadius: '8px', border: '1px solid #cbd5e1', outline: 'none' }}>
-                      <option value="Morning">Morning</option>
-                      <option value="Evening">Evening</option>
-                      <option value="Full Day">Full Day</option>
-                    </select>
-                  </div>
-                </div>
-                <div className="modal-footer" style={{ padding: '16px 24px', background: '#0f1219', borderTop: '1px solid #1f2330', display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
-                  <button type="button" onClick={() => setIsModalOpen(false)} style={{ padding: '10px 16px', borderRadius: '8px', background: '#161922', border: '1px solid #cbd5e1', fontWeight: 500, color: '#9ca3af', cursor: 'pointer' }}>Cancel</button>
-                  <button type="submit" style={{ padding: '10px 16px', borderRadius: '8px', background: '#6366f1', border: 'none', fontWeight: 500, color: '#161922', cursor: 'pointer' }}>Send Invite</button>
-                </div>
-              </form>
-            ) : (
-              <div style={{ padding: '24px', textAlign: 'center' }}>
-                <div style={{ background: 'rgba(21, 128, 61, 0.2)', color: '#4ade80', width: '48px', height: '48px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
-                  <UserCheck size={24} />
-                </div>
-                <h3 style={{ fontSize: '1.25rem', color: '#f8fafc', marginBottom: '8px', fontWeight: 600 }}>Invite Sent!</h3>
-                <p style={{ color: '#9ca3af', fontSize: '0.875rem', marginBottom: '24px' }}>
-                  An email has been sent to <strong>{inviteResult.email}</strong>. If you haven't configured the email server yet, you can manually share this invite link:
-                </p>
-                <div style={{ background: '#0f1219', border: '1px dashed #cbd5e1', borderRadius: '8px', padding: '12px', display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '24px' }}>
-                  <input type="text" readOnly value={inviteResult.link} style={{ flex: 1, background: 'none', border: 'none', outline: 'none', color: '#9ca3af', fontSize: '0.875rem' }} />
-                  <button onClick={() => { navigator.clipboard.writeText(inviteResult.link); alert('Copied to clipboard!'); }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#b48600' }}>
-                    <Copy size={18} />
-                  </button>
-                </div>
-                <button onClick={() => { setIsModalOpen(false); setInviteResult(null); }} style={{ width: '100%', padding: '10px', borderRadius: '8px', background: '#6366f1', border: 'none', fontWeight: 500, color: '#161922', cursor: 'pointer' }}>
-                  Done
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
+
 
       {/* Edit Staff Modal */}
       {isEditModalOpen && (
