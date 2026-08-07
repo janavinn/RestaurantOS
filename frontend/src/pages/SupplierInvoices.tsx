@@ -285,11 +285,16 @@ export default function SupplierInvoices() {
                     return (
                       <tr key={inv.id} style={{ borderBottom: '1px solid #1f2330' }}>
                         <td style={{ padding: '16px 24px', fontSize: '0.875rem', fontWeight: 600, color: '#f8fafc', display: 'flex', gap: '8px', alignItems: 'center' }}>
-                          {inv.id.substring(0, 8).toUpperCase()}
-                          {inv.imageUrl && (
-                            <button onClick={() => setViewImageUrl(inv.imageUrl)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#6366f1', padding: '2px', display: 'flex' }} title="View Uploaded Image">
-                              <Receipt size={16} />
+                          {inv.imageUrl ? (
+                            <button 
+                              onClick={() => setViewImageUrl(inv.imageUrl)} 
+                              style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#6366f1', padding: 0, fontWeight: 600, textDecoration: 'underline', fontSize: '0.875rem' }} 
+                              title="View Uploaded Image"
+                            >
+                              {inv.id.substring(0, 8).toUpperCase()}
                             </button>
+                          ) : (
+                            <span>{inv.id.substring(0, 8).toUpperCase()}</span>
                           )}
                         </td>
                         <td style={{ padding: '16px 24px', fontSize: '0.875rem', color: '#cbd5e1' }}>{inv.supplier}</td>
