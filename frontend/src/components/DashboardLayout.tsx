@@ -14,7 +14,7 @@ export default function DashboardLayout() {
   const { urlRole, urlUsername } = useParams();
   const [userName, setUserName] = useState('');
   const [userRole, setUserRole] = useState('');
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 1024);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [notifications, setNotifications] = useState<any[]>([]);
@@ -165,7 +165,7 @@ export default function DashboardLayout() {
   return (
     <div className={`dashboard-layout ${isSidebarOpen ? 'sidebar-open' : 'sidebar-closed'}`} style={['CHEF', 'WAITER', 'MANAGER'].includes(userRole) ? { backgroundColor: '#0a0a0a', color: '#f8fafc' } : {}}>
       {/* Mobile Sidebar Overlay */}
-      <div className="mobile-sidebar-overlay" style={{ display: 'none' }} onClick={() => setIsSidebarOpen(false)}></div>
+      {isSidebarOpen && <div className="mobile-sidebar-overlay" onClick={() => setIsSidebarOpen(false)}></div>}
       
       {/* SIDEBAR */}
       <aside className={`sidebar ${isSidebarOpen ? 'open' : ''}`} style={['CHEF', 'WAITER', 'MANAGER'].includes(userRole) ? { backgroundColor: '#0a0a0a', borderRight: '1px solid #1f2330' } : {}}>
