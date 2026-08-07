@@ -124,6 +124,7 @@ model PurchaseOrder {
   status       String     @default("PENDING") // PENDING, APPROVED, REJECTED, RECEIVED
   date         DateTime   @default(now())
   invoiceNumber String?
+  imageUrl     String?
   items        Json?
   restaurantId String
   restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)

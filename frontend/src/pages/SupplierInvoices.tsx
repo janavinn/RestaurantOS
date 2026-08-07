@@ -15,6 +15,8 @@ export default function SupplierInvoices() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [aiModalOpen, setAiModalOpen] = useState(false);
   const [parsedData, setParsedData] = useState<any>({ invoiceNumber: '', supplier: '', date: '', total: 0, items: [], status: 'RECEIVED' });
+  const [uploadedImageBase64, setUploadedImageBase64] = useState<string | null>(null);
+  const [viewImageUrl, setViewImageUrl] = useState<string | null>(null);
 
   const fetchInvoices = async () => {
     try {
@@ -43,6 +45,12 @@ export default function SupplierInvoices() {
     setIsProcessing(true);
     const formData = new FormData();
     formData.append('invoice', file);
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      setUploadedImageBase64(event.target?.result as string);
+    };
+    reader.readAsDataURL(file);
 
     try {
       const token = localStorage.getItem('token');
@@ -77,11 +85,12 @@ export default function SupplierInvoices() {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}` 
         },
-        body: JSON.stringify(parsedData)
+        body: JSON.stringify({ ...parsedData, imageUrl: uploadedImageBase64 })
       });
       
       if (res.ok) {
         setAiModalOpen(false);
+        setUploadedImageBase64(null);
         fetchInvoices(); // Refresh the list
       } else {
         alert('Failed to save invoice');
@@ -275,7 +284,14 @@ export default function SupplierInvoices() {
                     const s = getStatusStyle(inv.status);
                     return (
                       <tr key={inv.id} style={{ borderBottom: '1px solid #1f2330' }}>
-                        <td style={{ padding: '16px 24px', fontSize: '0.875rem', fontWeight: 600, color: '#f8fafc' }}>{inv.id.substring(0, 8).toUpperCase()}</td>
+                        <td style={{ padding: '16px 24px', fontSize: '0.875rem', fontWeight: 600, color: '#f8fafc', display: 'flex', gap: '8px', alignItems: 'center' }}>
+                          {inv.id.substring(0, 8).toUpperCase()}
+                          {inv.imageUrl && (
+                            <button onClick={() => setViewImageUrl(inv.imageUrl)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#6366f1', padding: '2px', display: 'flex' }} title="View Uploaded Image">
+                              <Receipt size={16} />
+                            </button>
+                          )}
+                        </td>
                         <td style={{ padding: '16px 24px', fontSize: '0.875rem', color: '#cbd5e1' }}>{inv.supplier}</td>
                         <td style={{ padding: '16px 24px', fontSize: '0.875rem', color: '#9ca3af' }}>{new Date(inv.date).toLocaleDateString()}</td>
                         <td style={{ padding: '16px 24px', fontSize: '0.875rem', fontWeight: 600, color: '#f8fafc' }}>₹ {inv.total.toLocaleString()}</td>
@@ -428,6 +444,16 @@ export default function SupplierInvoices() {
                 Save Verified Invoice
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Image Viewer Modal */}
+      {viewImageUrl && (
+        <div className="modal-overlay" style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(15, 23, 42, 0.8)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1100 }} onClick={() => setViewImageUrl(null)}>
+          <div className="modal-content" style={{ position: 'relative', maxWidth: '90%', maxHeight: '90%' }} onClick={e => e.stopPropagation()}>
+            <button onClick={() => setViewImageUrl(null)} style={{ position: 'absolute', top: '-40px', right: 0, background: 'none', border: 'none', color: '#fff', cursor: 'pointer' }}><X size={32}/></button>
+            <img src={viewImageUrl} alt="Invoice" style={{ maxWidth: '100%', maxHeight: '90vh', objectFit: 'contain', borderRadius: '8px', boxShadow: '0 10px 25px rgba(0,0,0,0.5)' }} />
           </div>
         </div>
       )}

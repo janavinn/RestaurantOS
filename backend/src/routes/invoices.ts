@@ -150,7 +150,7 @@ router.post('/process', upload.single('invoice'), async (req: Request, res: Resp
 // POST: Save confirmed invoice
 router.post('/confirm', async (req: Request, res: Response): Promise<any> => {
   const restaurantId = (req as any).user.restaurantId;
-  const { invoiceNumber, supplier, total, date, status, items } = req.body;
+  const { invoiceNumber, supplier, total, date, status, items, imageUrl } = req.body;
 
   try {
     const po = await prisma.purchaseOrder.create({
@@ -158,6 +158,7 @@ router.post('/confirm', async (req: Request, res: Response): Promise<any> => {
         restaurantId,
         supplier,
         invoiceNumber: invoiceNumber || null,
+        imageUrl: imageUrl || null,
         items: items || [],
         total: parseFloat(total),
         status: status || 'RECEIVED',
